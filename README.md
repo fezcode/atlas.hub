@@ -32,42 +32,52 @@ Before running the installer, ensure you have the following installed and availa
 
 ---
 
-## ✨ Features
+## 🔧 How It Works
 
-- 📦 **Interactive TUI:** A beautiful checklist to select and batch-install tools.
-- 🔄 **Live Sync:** Automatically pulls the latest `manifest.piml` from GitHub on every run.
-- 🛠️ **Automated Builds:** Clones and builds every selected tool using `gobake`.
-- 📂 **Centralized Bin:** Installs everything to a clean `~/.atlas/bin` directory.
-- 📶 **Offline Fallback:** Uses an embedded manifest if you're not connected to the internet.
+Atlas Hub is designed to be a "zero-maintenance" manager. Here is what happens under the hood:
+
+### 1. 🔄 Live Manifest Sync
+On every startup, `atlas.hub` connects to GitHub to fetch the latest tool definitions.
+- It clones/pulls the `atlas.hub` repository into **`~/.atlas/hub-data/`**.
+- This ensures you always see the newest tools and descriptions without needing to update the hub binary itself.
+- **Offline Mode:** If you have no internet, it seamlessly falls back to the embedded manifest compiled into the binary.
+
+### 2. 🏗️ Isolated Build Process
+When you choose to install a tool:
+1.  A secure **temporary directory** is created (e.g., `%TEMP%\atlas-hub-xyz`).
+2.  The tool's repository is cloned into this isolated workspace.
+3.  Dependencies are resolved via `go mod tidy`.
+4.  **`gobake`** is invoked to compile the binary for your specific OS and Architecture with the correct version flags injected.
+5.  The final binary is moved to **`~/.atlas/bin/`**.
+6.  The temporary directory is strictly cleaned up after the operation.
+
+### 3. 🛡️ Safe Self-Updates
+`atlas.hub` can update itself. To handle file locking (especially on Windows), it renames the currently running executable to `.old` before placing the new version. This allows for a smooth, interruption-free update process.
 
 ---
 
-## ⚙️ Post-Installation: Add to PATH
+## 📂 File Structure
 
-To use your new Atlas tools from anywhere, you **must** add the installation directory to your system's `PATH`.
+The Atlas ecosystem lives entirely in your home directory:
 
-### 🪟 Windows
-Run this command in an **Administrator PowerShell** to permanently update your User PATH:
-```powershell
-$Path = [Environment]::GetEnvironmentVariable("Path", "User")
-$AtlasPath = "$HOME\.atlas\bin"
-if ($Path -notlike "*$AtlasPath*") {
-    [Environment]::SetEnvironmentVariable("Path", "$Path;$AtlasPath", "User")
-    Write-Host "✅ Added to PATH. Restart your terminal to apply changes." -ForegroundColor Green
-}
+```text
+~/.atlas/
+├── bin/            # Where all compiled binaries live (Add this to your PATH!)
+│   ├── atlas.hub
+│   ├── atlas.todo
+│   ├── atlas.stats
+│   └── ...
+├── hub-data/       # Local cache of the hub repository for manifest data
+└── config/         # (Optional) Configuration files for individual tools
 ```
 
-### 🍎 macOS (Zsh)
-```bash
-echo 'export PATH="$HOME/.atlas/bin:$PATH"' >> ~/.zshrc
-source ~/.zshrc
-```
+---
 
-### 🐧 Linux (Bash)
-```bash
-echo 'export PATH="$HOME/.atlas/bin:$PATH"' >> ~/.bashrc
-source ~/.bashrc
-```
+## ✨ Features
+
+- 📦 **Interactive TUI:** A beautiful checklist to select and batch-install tools.
+- 📊 **Detailed Progress:** Global progress bar and real-time status updates for long builds.
+- ⚙️ **Post-Install setup:** Instructions on adding the bin directory to your PATH.
 
 ---
 
