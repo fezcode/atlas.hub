@@ -25,6 +25,11 @@ type Model struct {
 }
 
 func NewModel(manager *install.Manager, tools []model.Tool, installPath string) Model {
+	for i := range tools {
+		if tools[i].IsHub {
+			tools[i].Selected = true
+		}
+	}
 	return Model{
 		Manager:     manager,
 		Tools:       tools,
@@ -72,7 +77,9 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 				m.Cursor++
 			}
 		case " ", "space":
-			m.Tools[m.Cursor].Selected = !m.Tools[m.Cursor].Selected
+			if !m.Tools[m.Cursor].IsHub {
+				m.Tools[m.Cursor].Selected = !m.Tools[m.Cursor].Selected
+			}
 		case "enter":
 			if m.State == StateList {
 				// Start installation

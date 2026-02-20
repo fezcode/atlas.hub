@@ -136,10 +136,20 @@ func (m *Manager) Install(tool *model.Tool) error {
 	}
 	destPath := filepath.Join(m.InstallPath, destName)
 
-	// Remove existing if any
-	os.Remove(destPath)
+	// Safe update (especially for Windows): 
+	// If the file exists, rename it to .old before writing the new one.
+	// Windows allows renaming running binaries, but not overwriting.
+	if _, err := os.Stat(destPath); err == nil {
+		oldPath := destPath + ".old"
+		os.Remove(oldPath) // Remove previous .old if any
+		if err := os.Rename(destPath, oldPath); err != nil {
+			// If rename fails (might be okay if it's not the running process), 
+			// try to remove it as a fallback.
+			os.Remove(destPath)
+		}
+	}
 
-	// Copy/Move
+	// Copy/Move binary to destination
 	input, err := os.ReadFile(binaryPath)
 	if err != nil {
 		return err
