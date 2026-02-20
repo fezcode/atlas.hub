@@ -6,6 +6,7 @@
     (bin) atlas.hub
     (category) Core
     (is_hub) true
+    (version) 0.1.0
 
   > (tool)
     (name) atlas.todo
@@ -13,63 +14,84 @@
     (repo) https://github.com/fezcode/atlas.todo
     (bin) atlas.todo
     (category) Productivity
+    (version) 0.2.0
+
   > (tool)
     (name) atlas.stats
     (description) Real-time system monitoring (CPU, RAM, Disk, Network).
     (repo) https://github.com/fezcode/atlas.stats
     (bin) atlas.stats
     (category) System
+    (version) 0.1.0
+
   > (tool)
     (name) atlas.websearch
     (description) Blazing fast CLI search tool (DDG, Wiki, HN, Reddit).
     (repo) https://github.com/fezcode/atlas.websearch
     (bin) atlas.websearch
     (category) Productivity
+    (version) 0.1.0
+
   > (tool)
     (name) atlas.compass
     (description) Secure, local-first terminal password manager.
     (repo) https://github.com/fezcode/atlas.compass
     (bin) atlas.compass
     (category) Security
+    (version) 0.1.0
+
   > (tool)
     (name) atlas.clock
     (description) High-visibility world clock dashboard.
     (repo) https://github.com/fezcode/atlas.clock
     (bin) atlas.clock
     (category) Productivity
+    (version) 0.1.0
+
   > (tool)
     (name) atlas.cam
     (description) Terminal webcam viewer and ASCII camera.
     (repo) https://github.com/fezcode/atlas.cam
     (bin) atlas.cam
     (category) Media
+    (version) 0.1.1
+
   > (tool)
     (name) atlas.games
     (description) Terminal-based game collection (Wilson's Revenge).
     (repo) https://github.com/fezcode/atlas.games
     (bin) atlas.games
     (category) Entertainment
+    (version) 0.1.0
+
   > (tool)
     (name) atlas.bench
     (description) High-performance benchmarking tool for CLI commands.
     (repo) https://github.com/fezcode/atlas.bench
     (bin) atlas.bench
     (category) Development
+    (version) 0.1.0
+
   > (tool)
     (name) atlas.radar
     (description) Git workspace monitor for multiple repositories.
     (repo) https://github.com/fezcode/atlas.radar
     (bin) atlas.radar
     (category) Development
+    (version) 0.1.0
+
   > (tool)
     (name) atlas.otp
     (description) Minimalist, secure terminal TOTP (2FA) manager.
     (repo) https://github.com/fezcode/atlas.otp
     (bin) atlas.otp
     (category) Security
+    (version) 0.1.0
+
   > (tool)
     (name) atlas.diff
     (description) High-visibility side-by-side terminal diff tool.
     (repo) https://github.com/fezcode/atlas.diff
     (bin) atlas.diff
     (category) Development
+    (version) 0.1.0

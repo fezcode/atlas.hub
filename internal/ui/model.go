@@ -5,7 +5,9 @@ import (
 
 	"atlas.hub/internal/install"
 	"atlas.hub/internal/model"
+	"github.com/charmbracelet/bubbles/key"
 	tea "github.com/charmbracelet/bubbletea"
+	"github.com/charmbracelet/lipgloss"
 )
 
 const (
@@ -92,6 +94,8 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			m.Tools[msg.Index].Error = msg.Err
 		} else {
 			m.Tools[msg.Index].Status = "done"
+			// Refresh version
+			m.Manager.CheckInstalledVersion(&m.Tools[msg.Index])
 		}
 		return m.installNext()
 	}
@@ -140,7 +144,21 @@ func (m Model) View() string {
 				checked = "[x]"
 			}
 
-			line := fmt.Sprintf("%s %s %s", cursor, checked, tool.Name)
+			// Version info
+			verInfo := ""
+			if tool.InstalledVersion != "" {
+				if tool.InstalledVersion != tool.LatestVersion && tool.LatestVersion != "" {
+					verInfo = fmt.Sprintf(" [%s -> %s]", tool.InstalledVersion, tool.LatestVersion)
+					verInfo = lipgloss.NewStyle().Foreground(lipgloss.Color("#00D7FF")).Render(verInfo) // Cyan for update
+				} else {
+					verInfo = fmt.Sprintf(" [v%s]", tool.InstalledVersion)
+					verInfo = lipgloss.NewStyle().Foreground(lipgloss.Color("#555555")).Render(verInfo) // Grey for same
+				}
+			} else if tool.LatestVersion != "" {
+				// verInfo = fmt.Sprintf(" (v%s)", tool.LatestVersion)
+			}
+
+			line := fmt.Sprintf("%s %s %s%s", cursor, checked, tool.Name, verInfo)
 			if m.Cursor == i {
 				line = selectedItemStyle.Render(line)
 			} else {

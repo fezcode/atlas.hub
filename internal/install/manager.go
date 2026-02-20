@@ -158,3 +158,29 @@ func (m *Manager) Install(tool *model.Tool) error {
 
 	return nil
 }
+
+func (m *Manager) CheckInstalledVersion(tool *model.Tool) {
+	destName := tool.Bin
+	if runtime.GOOS == "windows" && !strings.HasSuffix(destName, ".exe") {
+		destName += ".exe"
+	}
+	binPath := filepath.Join(m.InstallPath, destName)
+	
+	if _, err := os.Stat(binPath); err != nil {
+		return // Not installed
+	}
+	
+	// Run binary --version
+	cmd := exec.Command(binPath, "--version")
+	// Prevent blocking or TUI weirdness by capturing output strictly
+	out, err := cmd.Output()
+	if err == nil {
+		// Expected output: "atlas.xyz v0.1.0\n" or just "v0.1.0" depending on implementation
+		// My implementation: "atlas.xyz v0.1.0"
+		parts := strings.Fields(string(out))
+		if len(parts) > 0 {
+			v := parts[len(parts)-1]
+			tool.InstalledVersion = strings.TrimPrefix(v, "v")
+		}
+	}
+}

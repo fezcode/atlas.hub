@@ -71,6 +71,11 @@ func main() {
 	}
 	defer manager.Cleanup()
 
+	// Check installed versions
+	for i := range tools {
+		manager.CheckInstalledVersion(&tools[i])
+	}
+
 	// 5. Start TUI
 	p := tea.NewProgram(ui.NewModel(manager, tools, installPath), tea.WithAltScreen())
 	if _, err := p.Run(); err != nil {
