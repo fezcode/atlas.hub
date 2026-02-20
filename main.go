@@ -17,7 +17,14 @@ import (
 //go:embed manifest.piml
 var manifestFS embed.FS
 
+var Version = "0.1.0"
+
 func main() {
+	if len(os.Args) > 1 && (os.Args[1] == "-v" || os.Args[1] == "--version") {
+		fmt.Printf("atlas.hub v%s\n", Version)
+		return
+	}
+
 	// 1. Determine Paths
 	home, err := os.UserHomeDir()
 	if err != nil {
