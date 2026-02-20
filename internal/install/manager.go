@@ -49,32 +49,34 @@ func (m *Manager) Cleanup() {
 
 func (m *Manager) ensureGobake() (string, error) {
 	path, err := exec.LookPath("gobake")
-	if err == nil {
-		return path, nil
+	if err != nil {
+		// Try go install if not found
+		cmd := exec.Command("go", "install", "github.com/fezcode/gobake@latest")
+		if out, err := cmd.CombinedOutput(); err != nil {
+			return "", fmt.Errorf("gobake install failed: %s", string(out))
+		}
+		
+		// Re-check path
+		path, err = exec.LookPath("gobake")
+		if err != nil {
+			// Try GOPATH/bin as last resort
+			gopath := os.Getenv("GOPATH")
+			if gopath == "" {
+				home, _ := os.UserHomeDir()
+				gopath = filepath.Join(home, "go")
+			}
+			binPath := filepath.Join(gopath, "bin", "gobake")
+			if runtime.GOOS == "windows" {
+				binPath += ".exe"
+			}
+			if _, statErr := os.Stat(binPath); statErr == nil {
+				path = binPath
+			} else {
+				return "", fmt.Errorf("gobake not found in PATH or GOPATH/bin after install")
+			}
+		}
 	}
-
-	// Try go install
-	cmd := exec.Command("go", "install", "github.com/fezcode/gobake@latest")
-	if out, err := cmd.CombinedOutput(); err != nil {
-		return "", fmt.Errorf("install failed: %s", string(out))
-	}
-
-	// Check GOPATH/bin
-	gopath := os.Getenv("GOPATH")
-	if gopath == "" {
-		home, _ := os.UserHomeDir()
-		gopath = filepath.Join(home, "go")
-	}
-	binPath := filepath.Join(gopath, "bin", "gobake")
-	if runtime.GOOS == "windows" {
-		binPath += ".exe"
-	}
-
-	if _, err := os.Stat(binPath); err == nil {
-		return binPath, nil
-	}
-
-	return "", fmt.Errorf("gobake installed but not found in PATH or GOPATH/bin")
+	return path, nil
 }
 
 func (m *Manager) Install(tool *model.Tool) error {
@@ -89,15 +91,21 @@ func (m *Manager) Install(tool *model.Tool) error {
 		return fmt.Errorf("clone failed: %w", err)
 	}
 
-	// 2. Build with gobake
-	cmd := exec.Command(m.GobakePath, "build")
-	cmd.Dir = toolDir
-	// Set env to ensure CGO is correct if needed, but inheriting env is usually fine
-	if output, err := cmd.CombinedOutput(); err != nil {
+	// 2. Tidy dependencies (Fixes compass error)
+	tidyCmd := exec.Command("go", "mod", "tidy")
+	tidyCmd.Dir = toolDir
+	if output, err := tidyCmd.CombinedOutput(); err != nil {
+		return fmt.Errorf("go mod tidy failed: %s", string(output))
+	}
+
+	// 3. Build with gobake
+	buildCmd := exec.Command(m.GobakePath, "build")
+	buildCmd.Dir = toolDir
+	if output, err := buildCmd.CombinedOutput(); err != nil {
 		return fmt.Errorf("build failed: %s", string(output))
 	}
 
-	// 3. Find binary
+	// 4. Find binary (Flexible detection for games/wilson-revenge etc)
 	buildDir := filepath.Join(toolDir, "build")
 	entries, err := os.ReadDir(buildDir)
 	if err != nil {
@@ -105,23 +113,23 @@ func (m *Manager) Install(tool *model.Tool) error {
 	}
 
 	var binaryPath string
-	target := fmt.Sprintf("%s-%s-%s", tool.Name, runtime.GOOS, runtime.GOARCH)
+	suffix := fmt.Sprintf("-%s-%s", runtime.GOOS, runtime.GOARCH)
 	if runtime.GOOS == "windows" {
-		target += ".exe"
+		suffix += ".exe"
 	}
 
 	for _, e := range entries {
-		if e.Name() == target {
+		if strings.HasSuffix(e.Name(), suffix) {
 			binaryPath = filepath.Join(buildDir, e.Name())
 			break
 		}
 	}
 
 	if binaryPath == "" {
-		return fmt.Errorf("binary not found for target %s", target)
+		return fmt.Errorf("binary with suffix %s not found in build dir", suffix)
 	}
 
-	// 4. Move to install path
+	// 5. Move to install path
 	destName := tool.Bin
 	if runtime.GOOS == "windows" && !strings.HasSuffix(destName, ".exe") {
 		destName += ".exe"
