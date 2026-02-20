@@ -9,6 +9,14 @@
     (version) 0.2.1
 
   > (tool)
+    (name) atlas.grave
+    (description) High-fidelity interactive process reaper.
+    (repo) https://github.com/fezcode/atlas.grave
+    (bin) atlas.grave
+    (category) System
+    (version) 0.1.0
+
+  > (tool)
     (name) atlas.facade
     (description) Retro-future Pip-Boy style mock API server.
     (repo) https://github.com/fezcode/atlas.facade
