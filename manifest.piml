@@ -1,11 +1,5 @@
 (tools)
   > (tool)
-    (name) atlas.hub
-    (description) The centralized installer and manager for the Atlas Suite.
-    (repo) https://github.com/fezcode/atlas.hub
-    (bin) atlas.hub
-    (category) Core
-  > (tool)
     (name) atlas.todo
     (description) A fast, minimalist, local-first TUI task manager.
     (repo) https://github.com/fezcode/atlas.todo
