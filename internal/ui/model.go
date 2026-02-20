@@ -5,8 +5,9 @@ import (
 
 	"atlas.hub/internal/install"
 	"atlas.hub/internal/model"
-	"github.com/charmbracelet/bubbles/progress"
+	"github.com/charmbracelet/bubbles/key"
 	tea "github.com/charmbracelet/bubbletea"
+	"github.com/charmbracelet/lipgloss"
 )
 
 const (
@@ -16,18 +17,12 @@ const (
 )
 
 type Model struct {
-	Manager       *install.Manager
-	Tools         []model.Tool
-	InstallPath   string
-	Cursor        int
-	State         int
-	Quitting      bool
-	
-	// Progress
-	Progress      progress.Model
-	CurrentAction string
-	CurrentIndex  int // Currently installing tool index
-	InstallCh     chan interface{} 
+	Manager     *install.Manager
+	Tools       []model.Tool
+	InstallPath string
+	Cursor      int
+	State       int
+	Quitting    bool
 }
 
 func NewModel(manager *install.Manager, tools []model.Tool, installPath string) Model {
@@ -36,17 +31,11 @@ func NewModel(manager *install.Manager, tools []model.Tool, installPath string) 
 			tools[i].Selected = true
 		}
 	}
-	
-	p := progress.New(progress.WithDefaultGradient())
-	p.Width = 40
-
 	return Model{
 		Manager:     manager,
 		Tools:       tools,
 		InstallPath: installPath,
 		State:       StateList,
-		Progress:    p,
-		CurrentIndex: -1,
 	}
 }
 
@@ -54,27 +43,9 @@ func (m Model) Init() tea.Cmd {
 	return nil
 }
 
-// Messages
-type installProgressMsg string
-type installDoneMsg error
-
-func waitForInstall(ch chan interface{}) tea.Cmd {
-	return func() tea.Msg {
-		msg, ok := <-ch
-		if !ok {
-			return nil 
-		}
-		switch v := msg.(type) {
-		case string:
-			return installProgressMsg(v)
-		case error:
-			return installDoneMsg(v)
-		case nil: // nil error means success
-			return installDoneMsg(nil)
-		default:
-			return nil
-		}
-	}
+type InstallMsg struct {
+	Index int
+	Err   error
 }
 
 func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
@@ -112,86 +83,43 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			}
 		case "enter":
 			if m.State == StateList {
-				// Start installation
 				m.State = StateInstalling
 				return m.installNext()
 			}
 		}
 
-	case installProgressMsg:
-		m.CurrentAction = string(msg)
-		return m, waitForInstall(m.InstallCh)
-
-	case installDoneMsg:
-		// Mark current as done/error
-		if msg != nil {
-			m.Tools[m.CurrentIndex].Status = "error"
-			m.Tools[m.CurrentIndex].Error = msg
+	case InstallMsg:
+		if msg.Err != nil {
+			m.Tools[msg.Index].Status = "error"
+			m.Tools[msg.Index].Error = msg.Err
 		} else {
-			m.Tools[m.CurrentIndex].Status = "done"
+			m.Tools[msg.Index].Status = "done"
 		}
-		m.CurrentAction = ""
-		// Install next
 		return m.installNext()
-		
-	case progress.FrameMsg:
-		progressModel, cmd := m.Progress.Update(msg)
-		m.Progress = progressModel.(progress.Model)
-		return m, cmd
 	}
 
 	return m, nil
 }
 
 func (m Model) installNext() (tea.Model, tea.Cmd) {
-	// Find the next tool that is selected but not started
 	for i := range m.Tools {
 		if m.Tools[i].Selected && m.Tools[i].Status == "" {
 			m.Tools[i].Status = "installing"
-			m.CurrentIndex = i
-			m.CurrentAction = "Starting..."
 			
-			// Count total selected and completed for progress bar
-			total := 0
-			done := 0
-			for _, t := range m.Tools {
-				if t.Selected {
-					total++
-					if t.Status == "done" || t.Status == "error" {
-						done++
-					}
-				}
-			}
-			// Current one is starting, so done is previous count.
-			// But we want smooth progress?
-			// Let's set progress to done/total at start of this step
-			pct := float64(done) / float64(total)
-			
-			// Note: We can't easily animate the bar smoothly WITHIN a tool install without more granular events.
-			// But we can update it step-by-step.
-			
-			m.InstallCh = make(chan interface{}, 10) // Buffered to prevent deadlock
-			
+			// Capture variables for closure
+			idx := i
 			tool := m.Tools[i]
-			go func() {
-				err := m.Manager.Install(&tool, func(status string) {
-					m.InstallCh <- status
-				})
-				m.InstallCh <- err
-				close(m.InstallCh)
-			}()
 			
-			return m, tea.Batch(
-				waitForInstall(m.InstallCh),
-				m.Progress.SetPercent(pct),
-			)
+			cmd := func() tea.Msg {
+				err := m.Manager.Install(&tool)
+				return InstallMsg{Index: idx, Err: err}
+			}
+			return m, cmd
 		}
 	}
 	
-	// All done
 	m.State = StateDone
-	m.CurrentIndex = -1
-	return m, m.Progress.SetPercent(1.0)
+	return m, nil
 }
 
 func (m Model) View() string {
@@ -226,7 +154,6 @@ func (m Model) View() string {
 	} else if m.State == StateInstalling || m.State == StateDone {
 		s += "Installation Progress:\n\n"
 		
-		// Count selected tools
 		count := 0
 		for _, tool := range m.Tools {
 			if tool.Selected {
@@ -237,7 +164,6 @@ func (m Model) View() string {
 		if count == 0 {
 			s += "  " + itemStyle.Render("No tools selected.") + "\n"
 		} else {
-			// Limit list height if too many?
 			for _, tool := range m.Tools {
 				if !tool.Selected {
 					continue
@@ -263,15 +189,12 @@ func (m Model) View() string {
 			}
 		}
 		
-		s += "\n"
-		if m.State == StateInstalling {
-			s += m.Progress.View() + "\n"
-			s += helpStyle.Render(m.CurrentAction) + "\n"
-		} else {
-			s += m.Progress.View() + "\n"
+		if m.State == StateDone {
 			s += "\n" + headerStyle.Render("Installation complete!") + "\n"
 			s += itemStyle.Render(fmt.Sprintf("Make sure %s is in your PATH.", m.InstallPath)) + "\n"
 			s += helpStyle.Render("Press 'q' to quit.")
+		} else {
+			s += "\n" + helpStyle.Render("Installing... Please wait.")
 		}
 	}
 

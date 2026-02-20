@@ -51,16 +51,13 @@ func (m *Manager) Cleanup() {
 func (m *Manager) ensureGobake() (string, error) {
 	path, err := exec.LookPath("gobake")
 	if err != nil {
-		// Try go install if not found
 		cmd := exec.Command("go", "install", "github.com/fezcode/gobake@latest")
 		if out, err := cmd.CombinedOutput(); err != nil {
 			return "", fmt.Errorf("gobake install failed: %s", string(out))
 		}
 		
-		// Re-check path
 		path, err = exec.LookPath("gobake")
 		if err != nil {
-			// Try GOPATH/bin as last resort
 			gopath := os.Getenv("GOPATH")
 			if gopath == "" {
 				home, _ := os.UserHomeDir()
@@ -80,10 +77,9 @@ func (m *Manager) ensureGobake() (string, error) {
 	return path, nil
 }
 
-func (m *Manager) Install(tool *model.Tool, onProgress func(string)) error {
+func (m *Manager) Install(tool *model.Tool) error {
 	toolDir := filepath.Join(m.TempDir, tool.Name)
 	
-	if onProgress != nil { onProgress("Cloning repository...") }
 	// 1. Clone
 	_, err := git.PlainClone(toolDir, false, &git.CloneOptions{
 		URL:      tool.Repo,
@@ -93,15 +89,13 @@ func (m *Manager) Install(tool *model.Tool, onProgress func(string)) error {
 		return fmt.Errorf("clone failed: %w", err)
 	}
 
-	if onProgress != nil { onProgress("Resolving dependencies...") }
-	// 2. Tidy dependencies (Fixes compass error)
+	// 2. Tidy dependencies
 	tidyCmd := exec.Command("go", "mod", "tidy")
 	tidyCmd.Dir = toolDir
 	if output, err := tidyCmd.CombinedOutput(); err != nil {
 		return fmt.Errorf("go mod tidy failed: %s", string(output))
 	}
 
-	if onProgress != nil { onProgress("Building binary...") }
 	// 3. Build with gobake
 	buildCmd := exec.Command(m.GobakePath, "build")
 	buildCmd.Dir = toolDir
@@ -109,7 +103,7 @@ func (m *Manager) Install(tool *model.Tool, onProgress func(string)) error {
 		return fmt.Errorf("build failed: %s", string(output))
 	}
 
-	// 4. Find binary (Flexible detection for games/wilson-revenge etc)
+	// 4. Find binary
 	buildDir := filepath.Join(toolDir, "build")
 	entries, err := os.ReadDir(buildDir)
 	if err != nil {
@@ -133,7 +127,6 @@ func (m *Manager) Install(tool *model.Tool, onProgress func(string)) error {
 		return fmt.Errorf("binary with suffix %s not found in build dir", suffix)
 	}
 
-	if onProgress != nil { onProgress("Installing...") }
 	// 5. Move to install path
 	destName := tool.Bin
 	if runtime.GOOS == "windows" && !strings.HasSuffix(destName, ".exe") {
@@ -141,15 +134,12 @@ func (m *Manager) Install(tool *model.Tool, onProgress func(string)) error {
 	}
 	destPath := filepath.Join(m.InstallPath, destName)
 
-	// Safe update (especially for Windows): 
-	// Use a unique backup name to avoid collisions/locks
+	// Safe update (timestamped backup)
 	if _, err := os.Stat(destPath); err == nil {
 		oldPath := fmt.Sprintf("%s.%d.old", destPath, time.Now().UnixNano())
 		if err := os.Rename(destPath, oldPath); err != nil {
-			// If rename fails, try normal remove
 			os.Remove(destPath)
 		} else {
-			// Try to clean up *other* .old files if possible, ignoring errors
 			matches, _ := filepath.Glob(destPath + ".*.old")
 			for _, match := range matches {
 				os.Remove(match)
@@ -157,7 +147,7 @@ func (m *Manager) Install(tool *model.Tool, onProgress func(string)) error {
 		}
 	}
 
-	// Copy/Move binary to destination
+	// Copy/Move binary
 	input, err := os.ReadFile(binaryPath)
 	if err != nil {
 		return err
