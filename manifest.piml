@@ -9,6 +9,14 @@
     (version) 0.2.1
 
   > (tool)
+    (name) atlas.facade
+    (description) Retro-future Pip-Boy style mock API server.
+    (repo) https://github.com/fezcode/atlas.facade
+    (bin) atlas.facade
+    (category) Development
+    (version) 0.1.0
+
+  > (tool)
     (name) atlas.screensaver
     (description) A collection of aesthetic terminal screensavers (Pipes, Stars, Matrix, Bouncing).
     (repo) https://github.com/fezcode/atlas.screensaver
