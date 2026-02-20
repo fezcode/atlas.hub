@@ -7,6 +7,7 @@ import (
 	"path/filepath"
 	"runtime"
 	"strings"
+	"time"
 
 	"atlas.hub/internal/model"
 	"github.com/go-git/go-git/v5"
@@ -141,15 +142,18 @@ func (m *Manager) Install(tool *model.Tool, onProgress func(string)) error {
 	destPath := filepath.Join(m.InstallPath, destName)
 
 	// Safe update (especially for Windows): 
-	// If the file exists, rename it to .old before writing the new one.
-	// Windows allows renaming running binaries, but not overwriting.
+	// Use a unique backup name to avoid collisions/locks
 	if _, err := os.Stat(destPath); err == nil {
-		oldPath := destPath + ".old"
-		os.Remove(oldPath) // Remove previous .old if any
+		oldPath := fmt.Sprintf("%s.%d.old", destPath, time.Now().UnixNano())
 		if err := os.Rename(destPath, oldPath); err != nil {
-			// If rename fails (might be okay if it's not the running process), 
-			// try to remove it as a fallback.
+			// If rename fails, try normal remove
 			os.Remove(destPath)
+		} else {
+			// Try to clean up *other* .old files if possible, ignoring errors
+			matches, _ := filepath.Glob(destPath + ".*.old")
+			for _, match := range matches {
+				os.Remove(match)
+			}
 		}
 	}
 

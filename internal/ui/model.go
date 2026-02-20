@@ -170,7 +170,7 @@ func (m Model) installNext() (tea.Model, tea.Cmd) {
 			// Note: We can't easily animate the bar smoothly WITHIN a tool install without more granular events.
 			// But we can update it step-by-step.
 			
-			m.InstallCh = make(chan interface{})
+			m.InstallCh = make(chan interface{}, 10) // Buffered to prevent deadlock
 			
 			tool := m.Tools[i]
 			go func() {
