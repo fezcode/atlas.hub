@@ -10,11 +10,11 @@
 
   > (tool)
     (name) atlas.screensaver
-    (description) A collection of aesthetic terminal screensavers (Pipes, Stars).
+    (description) A collection of aesthetic terminal screensavers (Pipes, Stars, Matrix, Bouncing).
     (repo) https://github.com/fezcode/atlas.screensaver
     (bin) atlas.screensaver
     (category) Entertainment
-    (version) 0.1.1
+    (version) 0.2.0
 
   > (tool)
     (name) atlas.todo
