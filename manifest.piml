@@ -9,6 +9,14 @@
     (version) 0.1.0
 
   > (tool)
+    (name) atlas.screensaver
+    (description) A collection of aesthetic terminal screensavers (Pipes, Stars).
+    (repo) https://github.com/fezcode/atlas.screensaver
+    (bin) atlas.screensaver
+    (category) Entertainment
+    (version) 0.1.0
+
+  > (tool)
     (name) atlas.todo
     (description) A fast, minimalist, local-first TUI task manager.
     (repo) https://github.com/fezcode/atlas.todo
