@@ -79,9 +79,10 @@ func (m *Manager) ensureGobake() (string, error) {
 	return path, nil
 }
 
-func (m *Manager) Install(tool *model.Tool) error {
+func (m *Manager) Install(tool *model.Tool, onProgress func(string)) error {
 	toolDir := filepath.Join(m.TempDir, tool.Name)
 	
+	if onProgress != nil { onProgress("Cloning repository...") }
 	// 1. Clone
 	_, err := git.PlainClone(toolDir, false, &git.CloneOptions{
 		URL:      tool.Repo,
@@ -91,6 +92,7 @@ func (m *Manager) Install(tool *model.Tool) error {
 		return fmt.Errorf("clone failed: %w", err)
 	}
 
+	if onProgress != nil { onProgress("Resolving dependencies...") }
 	// 2. Tidy dependencies (Fixes compass error)
 	tidyCmd := exec.Command("go", "mod", "tidy")
 	tidyCmd.Dir = toolDir
@@ -98,6 +100,7 @@ func (m *Manager) Install(tool *model.Tool) error {
 		return fmt.Errorf("go mod tidy failed: %s", string(output))
 	}
 
+	if onProgress != nil { onProgress("Building binary...") }
 	// 3. Build with gobake
 	buildCmd := exec.Command(m.GobakePath, "build")
 	buildCmd.Dir = toolDir
@@ -129,6 +132,7 @@ func (m *Manager) Install(tool *model.Tool) error {
 		return fmt.Errorf("binary with suffix %s not found in build dir", suffix)
 	}
 
+	if onProgress != nil { onProgress("Installing...") }
 	// 5. Move to install path
 	destName := tool.Bin
 	if runtime.GOOS == "windows" && !strings.HasSuffix(destName, ".exe") {
