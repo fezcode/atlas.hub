@@ -71,7 +71,7 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			if m.Cursor < len(m.Tools)-1 {
 				m.Cursor++
 			}
-		case "space":
+		case " ", "space":
 			m.Tools[m.Cursor].Selected = !m.Tools[m.Cursor].Selected
 		case "enter":
 			if m.State == StateList {

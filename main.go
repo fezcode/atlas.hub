@@ -11,45 +11,52 @@ import (
 	"atlas.hub/internal/ui"
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/fezcode/go-piml"
+	"github.com/go-git/go-git/v5"
 )
 
 //go:embed manifest.piml
 var manifestFS embed.FS
 
 func main() {
-	// Load manifest
-	data, err := manifestFS.ReadFile("manifest.piml")
+	// 1. Determine Paths
+	home, err := os.UserHomeDir()
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "Error reading embedded manifest: %v\n", err)
+		fmt.Fprintf(os.Stderr, "Error getting home dir: %v\n", err)
 		os.Exit(1)
 	}
+	atlasDir := filepath.Join(home, ".atlas")
+	installPath := filepath.Join(atlasDir, "bin")
+	hubDataDir := filepath.Join(atlasDir, "hub-data")
 
+	// 2. Sync Manifest from Repo (Live Updates)
+	fmt.Print("🛰️  Syncing Atlas manifest...")
+	manifestPath, err := syncManifest(hubDataDir)
+	var data []byte
+	if err != nil {
+		fmt.Printf(" (offline, using embedded)\n")
+		data, _ = manifestFS.ReadFile("manifest.piml")
+	} else {
+		fmt.Printf(" done\n")
+		data, err = os.ReadFile(manifestPath)
+		if err != nil {
+			data, _ = manifestFS.ReadFile("manifest.piml")
+		}
+	}
+
+	// 3. Parse Manifest
 	var manifest model.Manifest
 	if err := piml.Unmarshal(data, &manifest); err != nil {
 		fmt.Fprintf(os.Stderr, "Error parsing manifest: %v\n", err)
 		os.Exit(1)
 	}
 
-	if len(manifest.Tools) == 0 {
-		var nested struct {
-			ToolsSection struct {
-				Tools []model.Tool `piml:"tool"`
-			} `piml:"tools"`
-		}
-		if err := piml.Unmarshal(data, &nested); err == nil && len(nested.ToolsSection.Tools) > 0 {
-			manifest.Tools = nested.ToolsSection.Tools
-		}
-	}
-
-	// Determine install path
-	home, err := os.UserHomeDir()
-	if err != nil {
-		fmt.Fprintf(os.Stderr, "Error getting home dir: %v\n", err)
+	tools := manifest.Tools
+	if len(tools) == 0 {
+		fmt.Fprintf(os.Stderr, "No tools found in manifest.\n")
 		os.Exit(1)
 	}
-	installPath := filepath.Join(home, ".atlas", "bin")
 
-	// Init manager
+	// 4. Init Manager
 	manager, err := install.NewManager(installPath)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Error initializing manager: %v\n", err)
@@ -57,10 +64,41 @@ func main() {
 	}
 	defer manager.Cleanup()
 
-	// Start TUI
-	p := tea.NewProgram(ui.NewModel(manager, manifest.Tools, installPath), tea.WithAltScreen())
+	// 5. Start TUI
+	p := tea.NewProgram(ui.NewModel(manager, tools, installPath), tea.WithAltScreen())
 	if _, err := p.Run(); err != nil {
 		fmt.Fprintf(os.Stderr, "Error running program: %v\n", err)
 		os.Exit(1)
 	}
+}
+
+func syncManifest(hubDataDir string) (string, error) {
+	repoURL := "https://github.com/fezcode/atlas.hub.git"
+	manifestFile := filepath.Join(hubDataDir, "manifest.piml")
+
+	if _, err := os.Stat(hubDataDir); os.IsNotExist(err) {
+		// Clone for the first time
+		_, err = git.PlainClone(hubDataDir, false, &git.CloneOptions{
+			URL: repoURL,
+		})
+		if err != nil {
+			return "", err
+		}
+	} else {
+		// Open and Pull
+		r, err := git.PlainOpen(hubDataDir)
+		if err != nil {
+			return "", err
+		}
+		w, err := r.Worktree()
+		if err != nil {
+			return "", err
+		}
+		err = w.Pull(&git.PullOptions{RemoteName: "origin"})
+		if err != nil && err != git.NoErrAlreadyUpToDate {
+			return "", err
+		}
+	}
+
+	return manifestFile, nil
 }

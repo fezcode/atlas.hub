@@ -5,77 +5,66 @@
     (repo) https://github.com/fezcode/atlas.hub
     (bin) atlas.hub
     (category) Core
-
   > (tool)
     (name) atlas.todo
     (description) A fast, minimalist, local-first TUI task manager.
     (repo) https://github.com/fezcode/atlas.todo
     (bin) atlas.todo
     (category) Productivity
-
   > (tool)
     (name) atlas.stats
     (description) Real-time system monitoring (CPU, RAM, Disk, Network).
     (repo) https://github.com/fezcode/atlas.stats
     (bin) atlas.stats
     (category) System
-
   > (tool)
     (name) atlas.websearch
     (description) Blazing fast CLI search tool (DDG, Wiki, HN, Reddit).
     (repo) https://github.com/fezcode/atlas.websearch
     (bin) atlas.websearch
     (category) Productivity
-
   > (tool)
     (name) atlas.compass
     (description) Secure, local-first terminal password manager.
     (repo) https://github.com/fezcode/atlas.compass
     (bin) atlas.compass
     (category) Security
-
   > (tool)
     (name) atlas.clock
     (description) High-visibility world clock dashboard.
     (repo) https://github.com/fezcode/atlas.clock
     (bin) atlas.clock
     (category) Productivity
-
   > (tool)
     (name) atlas.cam
     (description) Terminal webcam viewer and ASCII camera.
     (repo) https://github.com/fezcode/atlas.cam
     (bin) atlas.cam
     (category) Media
-
   > (tool)
     (name) atlas.games
     (description) Terminal-based game collection (Wilson's Revenge).
     (repo) https://github.com/fezcode/atlas.games
     (bin) atlas.games
     (category) Entertainment
-
   > (tool)
     (name) atlas.bench
     (description) High-performance benchmarking tool for CLI commands.
     (repo) https://github.com/fezcode/atlas.bench
     (bin) atlas.bench
     (category) Development
-
   > (tool)
     (name) atlas.radar
     (description) Git workspace monitor for multiple repositories.
     (repo) https://github.com/fezcode/atlas.radar
     (bin) atlas.radar
     (category) Development
-
   > (tool)
     (name) atlas.otp
     (description) Minimalist, secure terminal TOTP (2FA) manager.
     (repo) https://github.com/fezcode/atlas.otp
     (bin) atlas.otp
     (category) Security
-
   > (tool)
     (name) atlas.diff
     (description) High-visibility side-by-side terminal diff tool.
