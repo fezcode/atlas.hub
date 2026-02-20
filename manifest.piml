@@ -14,7 +14,7 @@
     (repo) https://github.com/fezcode/atlas.facade
     (bin) atlas.facade
     (category) Development
-    (version) 0.1.0
+    (version) 0.1.1
 
   > (tool)
     (name) atlas.screensaver
