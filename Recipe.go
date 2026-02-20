@@ -2,6 +2,7 @@
 package bake_recipe
 
 import (
+	"fmt"
 	"github.com/fezcode/gobake"
 )
 
@@ -30,14 +31,21 @@ func Run(bake *gobake.Engine) error {
 			return err
 		}
 
+		ldflags := fmt.Sprintf("-X main.Version=%s", bake.Info.Version)
+
 		for _, t := range targets {
 			output := "build/" + bake.Info.Name + "-" + t.os + "-" + t.arch
 			if t.os == "windows" {
 				output += ".exe"
 			}
 
-			ctx.Env = []string{"CGO_ENABLED=0"}
-			err := ctx.BakeBinary(t.os, t.arch, output)
+			ctx.Env = []string{
+				"CGO_ENABLED=0",
+				"GOOS=" + t.os,
+				"GOARCH=" + t.arch,
+			}
+			
+			err := ctx.Run("go", "build", "-ldflags", ldflags, "-o", output, ".")
 			if err != nil {
 				return err
 			}
