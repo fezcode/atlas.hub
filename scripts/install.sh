@@ -14,7 +14,7 @@ fi
 # 3. Check for gobake
 if ! command -v gobake &> /dev/null; then
     echo "🛰️  gobake not found in PATH, attempting to install..."
-    go install github.com/fezcode/gobake@latest
+    go install github.com/fezcode/gobake/cmd/gobake@latest
     GOBIN=$(go env GOBIN)
     if [ -z "$GOBIN" ]; then
         GOBIN=$(go env GOPATH)/bin
