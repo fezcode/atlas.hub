@@ -3,41 +3,42 @@ package ui
 import "github.com/charmbracelet/lipgloss"
 
 var (
-	gold   = lipgloss.Color("#FFD700")
-	silver = lipgloss.Color("#CCCCCC")
-	grey   = lipgloss.Color("#555555")
-	red    = lipgloss.Color("#FF5F5F")
-	green  = lipgloss.Color("#5FFF5F")
-	onyx   = lipgloss.Color("#121212")
-
 	appStyle = lipgloss.NewStyle().Padding(1, 2)
 
 	titleStyle = lipgloss.NewStyle().
-			Foreground(onyx).
-			Background(gold).
+			Foreground(lipgloss.Color("#FFFDF5")).
+			Background(lipgloss.Color("#6B50FF")).
 			Padding(0, 1).
 			Bold(true)
 
-	headerStyle = lipgloss.NewStyle().Foreground(gold).Bold(true)
-	
+	headerStyle = lipgloss.NewStyle().
+			Foreground(lipgloss.Color("#B3B3FF")).
+			Bold(true)
+
 	selectedItemStyle = lipgloss.NewStyle().
-				Foreground(gold).
-				Bold(true).
-				PaddingLeft(1)
+				PaddingLeft(1).
+				Foreground(lipgloss.Color("212")).
+				Bold(true)
 
 	itemStyle = lipgloss.NewStyle().
-			Foreground(silver).
 			PaddingLeft(2)
 
-	checkedStyle = lipgloss.NewStyle().Foreground(green).Bold(true)
-	uncheckedStyle = lipgloss.NewStyle().Foreground(grey)
+	cursorStyle = lipgloss.NewStyle().
+			Foreground(lipgloss.Color("212")).
+			Bold(true)
 
-	statusPendingStyle = lipgloss.NewStyle().Foreground(grey)
-	statusInstallingStyle = lipgloss.NewStyle().Foreground(gold).Bold(true)
-	statusDoneStyle = lipgloss.NewStyle().Foreground(green).Bold(true)
-	statusErrorStyle = lipgloss.NewStyle().Foreground(red).Bold(true)
+	checkboxStyle = lipgloss.NewStyle().
+			Foreground(lipgloss.Color("#585858"))
+
+	checkedStyle = lipgloss.NewStyle().
+			Foreground(lipgloss.Color("#00D787"))
+
+	statusPendingStyle = lipgloss.NewStyle().Foreground(lipgloss.Color("#626262"))
+	statusInstallingStyle = lipgloss.NewStyle().Foreground(lipgloss.Color("#00D7FF")).Bold(true)
+	statusDoneStyle = lipgloss.NewStyle().Foreground(lipgloss.Color("#00D787")).Bold(true)
+	statusErrorStyle = lipgloss.NewStyle().Foreground(lipgloss.Color("#FF5F87")).Bold(true)
 
 	helpStyle = lipgloss.NewStyle().
-			Foreground(grey).
+			Foreground(lipgloss.Color("#626262")).
 			MarginTop(1)
 )

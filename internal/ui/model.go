@@ -135,12 +135,12 @@ func (m Model) View() string {
 		for i, tool := range m.Tools {
 			cursor := " "
 			if m.Cursor == i {
-				cursor = ">"
+				cursor = cursorStyle.Render("❯")
 			}
 
-			checked := "[ ]"
+			checked := checkboxStyle.Render("☐")
 			if tool.Selected {
-				checked = "[x]"
+				checked = checkedStyle.Render("☑")
 			}
 
 			// Version info
@@ -157,13 +157,12 @@ func (m Model) View() string {
 				// verInfo = fmt.Sprintf(" (v%s)", tool.LatestVersion)
 			}
 
-			line := fmt.Sprintf("%s %s %s%s", cursor, checked, tool.Name, verInfo)
+			content := fmt.Sprintf("%s %s %s%s", cursor, checked, tool.Name, verInfo)
 			if m.Cursor == i {
-				line = selectedItemStyle.Render(line)
+				s += selectedItemStyle.Render(content) + "\n"
 			} else {
-				line = itemStyle.Render(line)
+				s += itemStyle.Render(content) + "\n"
 			}
-			s += line + "\n"
 		}
 		s += "\n" + helpStyle.Render("j/k: navigate • space: select • enter: install • q: quit")
 	} else if m.State == StateInstalling || m.State == StateDone {
