@@ -118,7 +118,7 @@
     (repo) https://github.com/fezcode/atlas.otp
     (bin) atlas.otp
     (category) Security
-    (version) 0.1.0
+    (version) 0.1.1
 
   > (tool)
     (name) atlas.diff
