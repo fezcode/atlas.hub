@@ -78,7 +78,7 @@
     (repo) https://github.com/fezcode/atlas.clock
     (bin) atlas.clock
     (category) Productivity
-    (version) 0.1.0
+    (version) 0.1.1
 
   > (tool)
     (name) atlas.cam
