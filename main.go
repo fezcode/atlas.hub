@@ -107,17 +107,11 @@ func syncManifest(hubDataDir string) (string, error) {
 			return "", err
 		}
 		
-		// Force clean the working directory to prevent uncommitted changes from blocking the pull
-		err = w.Clean(&git.CleanOptions{Dir: true})
+		// Force reset the working directory to prevent uncommitted changes from blocking the pull
+		err = w.Reset(&git.ResetOptions{Mode: git.HardReset})
 		if err != nil {
 			// Log error but proceed
-			fmt.Fprintf(os.Stderr, " warning: failed to clean hub-data: %v", err)
-		}
-		
-		err = w.Checkout(&git.CheckoutOptions{Force: true})
-		if err != nil {
-			// Log error but proceed
-			fmt.Fprintf(os.Stderr, " warning: failed to force checkout hub-data: %v", err)
+			fmt.Fprintf(os.Stderr, " warning: failed to reset hub-data: %v", err)
 		}
 
 		err = w.Pull(&git.PullOptions{RemoteName: "origin", Force: true})
