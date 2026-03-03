@@ -105,6 +105,14 @@
     (version) 0.1.2
 
   > (tool)
+    (name) atlas.pq
+    (description) Minimalist PIML processor (inspired by jq).
+    (repo) https://github.com/fezcode/atlas.pq
+    (bin) atlas.pq
+    (category) CLI
+    (version) 0.1.0
+
+  > (tool)
     (name) atlas.radar
     (description) Git workspace monitor for multiple repositories.
     (repo) https://github.com/fezcode/atlas.radar
