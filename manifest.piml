@@ -110,7 +110,7 @@
     (repo) https://github.com/fezcode/atlas.pq
     (bin) atlas.pq
     (category) CLI
-    (version) 0.1.0
+    (version) 0.1.1
 
   > (tool)
     (name) atlas.radar

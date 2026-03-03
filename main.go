@@ -24,6 +24,14 @@ func main() {
 		fmt.Printf("atlas.hub v%s\n", Version)
 		return
 	}
+	if len(os.Args) > 1 && (os.Args[1] == "-h" || os.Args[1] == "--help" || os.Args[1] == "help") {
+		fmt.Println("Atlas Hub - The centralized installer and manager for the Atlas Suite.")
+		fmt.Println("\nUsage:")
+		fmt.Println("  atlas.hub        Start the installer TUI")
+		fmt.Println("  atlas.hub -v     Show version")
+		fmt.Println("  atlas.hub -h     Show this help")
+		return
+	}
 
 	// 1. Determine Paths
 	home, err := os.UserHomeDir()
