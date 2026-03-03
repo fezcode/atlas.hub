@@ -135,3 +135,19 @@
     (bin) atlas.diff
     (category) Development
     (version) 0.1.2
+
+  > (tool)
+    (name) atlas.deck
+    (description) Interactive TUI command deck for project workflows and automation.
+    (repo) https://github.com/fezcode/atlas.deck
+    (bin) atlas.deck
+    (category) Productivity
+    (version) 0.1.0
+
+  > (tool)
+    (name) atlas.hash
+    (description) Fast, minimalist terminal utility for generating and comparing file hashes.
+    (repo) https://github.com/fezcode/atlas.hash
+    (bin) atlas.hash
+    (category) Utility
+    (version) 0.1.0
