@@ -97,25 +97,38 @@ func syncManifest(hubDataDir string) (string, error) {
 			return "", err
 		}
 	} else {
-		// Open and Pull
+		// Open and sync
 		r, err := git.PlainOpen(hubDataDir)
 		if err != nil {
 			return "", err
 		}
+
+		// 1. Fetch latest from origin
+		err = r.Fetch(&git.FetchOptions{
+			RemoteName: "origin",
+			Force:      true,
+		})
+		if err != nil && err != git.NoErrAlreadyUpToDate {
+			return "", err
+		}
+
+		// 2. Get the hash of origin/main
+		remoteRef, err := r.Reference("refs/remotes/origin/main", true)
+		if err != nil {
+			return "", err
+		}
+
+		// 3. Hard reset the worktree to that hash
 		w, err := r.Worktree()
 		if err != nil {
 			return "", err
 		}
-		
-		// Force reset the working directory to prevent uncommitted changes from blocking the pull
-		err = w.Reset(&git.ResetOptions{Mode: git.HardReset})
-		if err != nil {
-			// Log error but proceed
-			fmt.Fprintf(os.Stderr, " warning: failed to reset hub-data: %v", err)
-		}
 
-		err = w.Pull(&git.PullOptions{RemoteName: "origin", Force: true})
-		if err != nil && err != git.NoErrAlreadyUpToDate {
+		err = w.Reset(&git.ResetOptions{
+			Mode:   git.HardReset,
+			Commit: remoteRef.Hash(),
+		})
+		if err != nil {
 			return "", err
 		}
 	}
