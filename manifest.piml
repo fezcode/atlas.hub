@@ -46,7 +46,7 @@
     (repo) https://github.com/fezcode/atlas.todo
     (bin) atlas.todo
     (category) Productivity
-    (version) 0.5.0
+    (version) 0.5.1
 
   > (tool)
     (name) atlas.stats
