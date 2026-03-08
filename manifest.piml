@@ -167,3 +167,11 @@
     (bin) atlas.conquistador
     (category) System
     (version) 0.3.5
+
+  > (tool)
+    (name) atlas.horizon
+    (description) High-fidelity environmental and weather dashboard with atmospheric monitoring.
+    (repo) https://github.com/fezcode/atlas.horizon
+    (bin) atlas.horizon
+    (category) Productivity
+    (version) 0.1.0
