@@ -17,7 +17,7 @@ import (
 //go:embed manifest.piml
 var manifestFS embed.FS
 
-var Version = "0.1.0"
+var Version = "0.3.3"
 
 func main() {
 	if len(os.Args) > 1 && (os.Args[1] == "-v" || os.Args[1] == "--version") {
