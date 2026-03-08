@@ -11,7 +11,7 @@ if (!(Get-Command go -ErrorAction SilentlyContinue)) {
 # 3. Check for gobake
 if (!(Get-Command gobake -ErrorAction SilentlyContinue)) {
     Write-Host "🛰️  Installing gobake..." -ForegroundColor Cyan
-    go install github.com/fezcode/gobake@latest
+    go install github.com/fezcode/gobake/cmd/gobake@latest
     $GoBin = go env GOBIN
     if ($null -eq $GoBin -or $GoBin -eq "") {
         $GoPath = go env GOPATH

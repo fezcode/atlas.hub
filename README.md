@@ -28,7 +28,7 @@ irm https://raw.githubusercontent.com/fezcode/atlas.hub/main/scripts/install.ps1
 Before running the installer, ensure you have the following installed and available in your `PATH`:
 
 1.  **Go (1.25+):** Required for building the tools from source. [Download Go](https://go.dev/dl/).
-2.  **gobake:** The Atlas build orchestrator. If not found, the installer will attempt to install it for you via `go install github.com/fezcode/gobake@latest`.
+2.  **gobake:** The Atlas build orchestrator. If not found, the installer will attempt to install it for you via `go install github.com/fezcode/gobake/cmd/gobake@latest`.
 
 ---
 

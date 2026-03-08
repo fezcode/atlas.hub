@@ -51,7 +51,7 @@ func (m *Manager) Cleanup() {
 func (m *Manager) ensureGobake() (string, error) {
 	path, err := exec.LookPath("gobake")
 	if err != nil {
-		cmd := exec.Command("go", "install", "github.com/fezcode/gobake@latest")
+		cmd := exec.Command("go", "install", "github.com/fezcode/gobake/cmd/gobake@latest")
 		if out, err := cmd.CombinedOutput(); err != nil {
 			return "", fmt.Errorf("gobake install failed: %s", string(out))
 		}
