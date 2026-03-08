@@ -121,7 +121,7 @@ func (m *Model) updateViewport() {
 		return
 	}
 
-	headerHeight := 5 // Title + Welcome text + spacing
+	headerHeight := 6 // Title + Welcome text + spacing + Repo link
 	footerHeight := 2 // Help text + spacing
 	
 	visibleHeight := m.Height - headerHeight - footerHeight
@@ -165,9 +165,10 @@ func (m Model) View() string {
 	s := titleStyle.Render(" ATLAS.HUB ") + " " + headerStyle.Render("Installer") + "\n\n"
 
 	if m.State == StateList {
-		s += "Select tools to install (Space to toggle, Enter to confirm):\n\n"
+		s += "Select tools to install (Space to toggle, Enter to confirm):\n"
+		s += lipgloss.NewStyle().Foreground(lipgloss.Color("#666666")).Render("View all apps here: https://github.com/stars/fezcode/lists/atlas") + "\n\n"
 		
-		headerHeight := 5
+		headerHeight := 6
 		footerHeight := 2
 		visibleHeight := m.Height - headerHeight - footerHeight
 		if visibleHeight <= 0 {
