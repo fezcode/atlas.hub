@@ -151,3 +151,11 @@
     (bin) atlas.hash
     (category) Utility
     (version) 0.1.0
+
+  > (tool)
+    (name) atlas.convert
+    (description) Image conversion tool for JPEG, PNG, and HEIC
+    (repo) https://github.com/fezcode/atlas.convert
+    (bin) atlas.convert
+    (category) Media
+    (version) 0.1.0
