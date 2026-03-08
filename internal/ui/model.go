@@ -205,24 +205,30 @@ func (m Model) View() string {
 			}
 
 			content := fmt.Sprintf("%s %s %s%s", cursor, checked, tool.Name, verInfo)
+			
+			if m.ShowDescriptions && tool.Description != "" {
+				// Calculate remaining width
+				baseWidth := lipgloss.Width(content)
+				availableWidth := m.Width - baseWidth - 10 // Leave some padding
+				
+				if availableWidth > 10 {
+					desc := tool.Description
+					if lipgloss.Width(desc) > availableWidth {
+						desc = desc[:availableWidth-3] + "..."
+					}
+					content += " " + descriptionStyle.Render("- "+desc)
+				}
+			}
+
 			if m.Cursor == i {
 				s += selectedItemStyle.Render(content) + "\n"
 			} else {
 				s += itemStyle.Render(content) + "\n"
 			}
-
-			if m.ShowDescriptions {
-				desc := "   " + lipgloss.NewStyle().Foreground(lipgloss.Color("#777777")).Italic(true).Render(tool.Description)
-				s += desc + "\n"
-			}
 		}
 
 		// Fill remaining space if needed to keep help at bottom
 		renderedCount := end - m.Top
-		if m.ShowDescriptions {
-			// This is a rough estimation, but better than nothing for filling space
-			renderedCount *= 2
-		}
 		if renderedCount < visibleHeight {
 			for i := 0; i < visibleHeight-renderedCount; i++ {
 				s += "\n"

@@ -1,5 +1,4 @@
 (name) atlas.hub
-(version) 0.4.1
+(version) 0.4.2
 (description) The centralized installer and manager for the Atlas Suite.
 (license) MIT
-

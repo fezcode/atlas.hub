@@ -41,4 +41,8 @@ var (
 	helpStyle = lipgloss.NewStyle().
 			Foreground(lipgloss.Color("#626262")).
 			MarginTop(1)
+
+	descriptionStyle = lipgloss.NewStyle().
+				Foreground(lipgloss.Color("#777777")).
+				Italic(true)
 )
