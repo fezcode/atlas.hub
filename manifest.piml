@@ -118,7 +118,7 @@
     (repo) https://github.com/fezcode/atlas.radar
     (bin) atlas.radar
     (category) Development
-    (version) 0.1.5
+    (version) 0.1.6
 
   > (tool)
     (name) atlas.otp
