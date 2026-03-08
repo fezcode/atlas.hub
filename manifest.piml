@@ -159,3 +159,11 @@
     (bin) atlas.convert
     (category) Media
     (version) 0.2.0
+
+  > (tool)
+    (name) atlas.conquistador
+    (description) A powerful and beautiful terminal-based file explorer like Finder or Windows Explorer.
+    (repo) https://github.com/fezcode/atlas.conquistador
+    (bin) atlas.conquistador
+    (category) System
+    (version) 0.3.4
