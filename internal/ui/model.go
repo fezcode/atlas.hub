@@ -16,15 +16,16 @@ const (
 )
 
 type Model struct {
-	Manager     *install.Manager
-	Tools       []model.Tool
-	InstallPath string
-	Cursor      int
-	Top         int // Top visible item index
-	Width       int
-	Height      int
-	State       int
-	Quitting    bool
+	Manager          *install.Manager
+	Tools            []model.Tool
+	InstallPath      string
+	Cursor           int
+	Top              int // Top visible item index
+	Width            int
+	Height           int
+	State            int
+	Quitting         bool
+	ShowDescriptions bool
 }
 
 func NewModel(manager *install.Manager, tools []model.Tool, installPath string) Model {
@@ -86,6 +87,9 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 				m.Cursor++
 				m.updateViewport()
 			}
+		case "h":
+			m.ShowDescriptions = !m.ShowDescriptions
+			m.updateViewport()
 		case " ", "space":
 			if !m.Tools[m.Cursor].IsHub {
 				m.Tools[m.Cursor].Selected = !m.Tools[m.Cursor].Selected
@@ -205,17 +209,26 @@ func (m Model) View() string {
 			} else {
 				s += itemStyle.Render(content) + "\n"
 			}
+
+			if m.ShowDescriptions {
+				desc := "   " + lipgloss.NewStyle().Foreground(lipgloss.Color("#777777")).Italic(true).Render(tool.Description)
+				s += desc + "\n"
+			}
 		}
 
 		// Fill remaining space if needed to keep help at bottom
 		renderedCount := end - m.Top
+		if m.ShowDescriptions {
+			// This is a rough estimation, but better than nothing for filling space
+			renderedCount *= 2
+		}
 		if renderedCount < visibleHeight {
 			for i := 0; i < visibleHeight-renderedCount; i++ {
 				s += "\n"
 			}
 		}
 
-		s += "\n" + helpStyle.Render("j/k: navigate • space: select • enter: install • q: quit")
+		s += "\n" + helpStyle.Render("j/k: navigate • space: select • h: description • enter: install • q: quit")
 	} else if m.State == StateInstalling || m.State == StateDone {
 		s += "Installation Progress:\n\n"
 		

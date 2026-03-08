@@ -17,7 +17,7 @@ import (
 //go:embed manifest.piml
 var manifestFS embed.FS
 
-var Version = "0.3.3"
+var Version = "0.4.0"
 
 func main() {
 	if len(os.Args) > 1 && (os.Args[1] == "-v" || os.Args[1] == "--version") {
@@ -30,6 +30,12 @@ func main() {
 		fmt.Println("  atlas.hub        Start the installer TUI")
 		fmt.Println("  atlas.hub -v     Show version")
 		fmt.Println("  atlas.hub -h     Show this help")
+		fmt.Println("\nControls (TUI):")
+		fmt.Println("  j/k, Up/Down     Navigate the list")
+		fmt.Println("  Space            Toggle tool selection")
+		fmt.Println("  h                Toggle application descriptions")
+		fmt.Println("  Enter            Start installation of selected tools")
+		fmt.Println("  q, Ctrl+C        Quit")
 		return
 	}
 

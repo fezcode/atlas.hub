@@ -76,7 +76,8 @@ The Atlas ecosystem lives entirely in your home directory:
 ## ✨ Features
 
 - 📦 **Interactive TUI:** A beautiful checklist to select and batch-install tools.
-- 📊 **Detailed Progress:** Global progress bar and real-time status updates for long builds.
+- 📖 **Tool Descriptions:** Toggle detailed descriptions for each tool by pressing `h`.
+- 📊 **Detailed Progress:** Real-time status updates for installations.
 - ⚙️ **Post-Install setup:** Instructions on adding the bin directory to your PATH.
 
 ---
