@@ -94,7 +94,7 @@
     (repo) https://github.com/fezcode/atlas.games
     (bin) atlas.games
     (category) Entertainment
-    (version) 0.1.1
+    (version) 0.4.0
 
   > (tool)
     (name) atlas.bench
