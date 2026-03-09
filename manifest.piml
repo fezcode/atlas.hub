@@ -175,3 +175,11 @@
     (bin) atlas.horizon
     (category) Productivity
     (version) 0.1.0
+
+  > (tool)
+    (name) atlas.cat
+    (description) A beautiful, high-performance terminal text viewer with syntax highlighting and line numbers.
+    (repo) https://github.com/fezcode/atlas.cat
+    (bin) atlas.cat
+    (category) CLI
+    (version) 0.1.0
