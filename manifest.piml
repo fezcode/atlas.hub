@@ -215,3 +215,11 @@
     (bin) atlas.sql
     (category) Development
     (version) 0.2.0
+
+  > (tool)
+    (name) atlas.sand
+    (description) Interactive terminal-based falling sand and particle physics simulator.
+    (repo) https://github.com/fezcode/atlas.sand
+    (bin) atlas.sand
+    (category) Fun
+    (version) 0.1.0
