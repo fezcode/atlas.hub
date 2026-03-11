@@ -207,3 +207,11 @@
     (bin) atlas.ip
     (category) System
     (version) 0.1.0
+
+  > (tool)
+    (name) atlas.sql
+    (description) Terminal-based SQL client for SQLite and PostgreSQL with syntax highlighting.
+    (repo) https://github.com/fezcode/atlas.sql
+    (bin) atlas.sql
+    (category) Development
+    (version) 0.1.0
