@@ -10,11 +10,11 @@
 
   > (tool)
     (name) atlas.radio
-    (description) Global terminal radio receiver with Pip-Boy TUI.
+    (description) Global terminal radio receiver for Atlas Suite.
     (repo) https://github.com/fezcode/atlas.radio
     (bin) atlas.radio
     (category) Entertainment
-    (version) 0.2.2
+    (version) 0.3.1
 
   > (tool)
     (name) atlas.grave
@@ -26,7 +26,7 @@
 
   > (tool)
     (name) atlas.facade
-    (description) Retro-future Pip-Boy style mock API server.
+    (description) Retro-future industrial mock API server.
     (repo) https://github.com/fezcode/atlas.facade
     (bin) atlas.facade
     (category) Development
