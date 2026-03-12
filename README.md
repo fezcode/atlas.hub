@@ -96,6 +96,24 @@ The Atlas Hub currently manages the following tools:
 - **atlas.radar**: Git workspace monitor.
 - **atlas.otp**: Secure TOTP (2FA) manager.
 - **atlas.diff**: Side-by-side terminal diff tool.
+- **atlas.cat**: High-performance terminal text viewer.
+- **atlas.ed**: High-performance terminal text editor.
+- **atlas.git**: Comprehensive TUI git client.
+- **atlas.ip**: Fast, minimal tool to fetch IP and geolocation.
+- **atlas.sand**: Terminal-based falling sand simulator.
+- **atlas.sql**: Terminal-based SQL client for SQLite/PostgreSQL.
+- **atlas.chat**: Modern TUI chat terminal.
+- **atlas.color**: Interactive TUI color picker and converter.
+- **atlas.screensaver**: Collection of aesthetic terminal screensavers.
+- **atlas.facade**: Retro-future Pip-Boy style mock API server.
+- **atlas.pq**: Minimalist command-line PIML processor.
+- **atlas.hash**: Terminal utility for computing file hashes.
+- **atlas.grave**: High-fidelity, interactive process reaper.
+- **atlas.radio**: High-fidelity world radio receiver.
+- **atlas.deck**: Interactive TUI command deck for workflows.
+- **atlas.convert**: Minimalist terminal image conversion utility.
+- **atlas.conquistador**: Terminal-based file explorer.
+- **atlas.horizon**: Environmental and weather dashboard.
 
 ---
 

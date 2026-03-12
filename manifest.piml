@@ -94,7 +94,7 @@
     (repo) https://github.com/fezcode/atlas.games
     (bin) atlas.games
     (category) Entertainment
-    (version) 0.5.0
+    (version) 0.6.0
 
   > (tool)
     (name) atlas.bench
@@ -230,7 +230,7 @@
     (repo) https://github.com/fezcode/atlas.gitty
     (bin) atlas.gitty
     (category) Development
-    (version) 0.3.0
+    (version) 0.4.0
 
 
 
