@@ -223,3 +223,12 @@
     (bin) atlas.sand
     (category) Fun
     (version) 0.1.0
+
+  > (tool)
+    (name) atlas.gitty
+    (description) Comprehensive TUI git client with graphs, branch, tag, and multi-repo management.
+    (repo) https://github.com/fezcode/atlas.gitty
+    (bin) atlas.gitty
+    (category) Development
+    (version) 0.1.0
+
