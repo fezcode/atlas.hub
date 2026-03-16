@@ -234,3 +234,11 @@
 
 
 
+
+  > (tool)
+    (name) atlas.guide
+    (description) A personal health and wellness tracker for calories, gym activities, and mood.
+    (repo) https://github.com/fezcode/atlas.guide.git
+    (bin) atlas.guide
+    (category) Lifestyle
+    (version) 0.1.0
