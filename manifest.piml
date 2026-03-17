@@ -239,3 +239,11 @@
     (bin) atlas.guide
     (category) Lifestyle
     (version) 0.3.0
+
+  > (tool)
+    (name) atlas.notes
+    (description) A beautiful terminal-based markdown note manager.
+    (repo) https://github.com/fezcode/atlas.notes
+    (bin) atlas.notes
+    (category) Productivity
+    (version) 0.1.0
