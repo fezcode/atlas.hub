@@ -190,7 +190,7 @@
     (repo) https://github.com/fezcode/atlas.ed
     (bin) atlas.ed
     (category) Development
-    (version) 0.1.2
+    (version) 0.2.0
 
   > (tool)
     (name) atlas.color
