@@ -247,3 +247,11 @@
     (bin) atlas.notes
     (category) Productivity
     (version) 0.1.0
+
+  > (tool)
+    (name) atlas.batchdown
+    (description) A powerful batch downloader that processes multiple URLs from text files.
+    (repo) https://github.com/fezcode/atlas.batchdown
+    (bin) atlas.batchdown
+    (category) Productivity
+    (version) 0.1.0
