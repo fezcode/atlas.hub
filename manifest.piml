@@ -166,7 +166,7 @@
     (repo) https://github.com/fezcode/atlas.conquistador
     (bin) atlas.conquistador
     (category) System
-    (version) 0.3.7
+    (version) 0.4.0
 
   > (tool)
     (name) atlas.horizon
@@ -262,4 +262,4 @@
     (repo) https://github.com/fezcode/atlas.burner.git
     (bin) atlas.burner
     (category) System
-    (version) 0.1.0
+    (version) 0.2.0
