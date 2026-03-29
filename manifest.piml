@@ -263,3 +263,11 @@
     (bin) atlas.burner
     (category) System
     (version) 0.2.0
+
+  > (tool)
+    (name) atlas.archive
+    (description) An interactive step-by-step archiver and extractor.
+    (repo) https://github.com/fezcode/atlas.archive
+    (bin) atlas.archive
+    (category) System
+    (version) 0.1.0
