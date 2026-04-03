@@ -271,3 +271,11 @@
     (bin) atlas.archive
     (category) System
     (version) 0.1.0
+
+  > (tool)
+    (name) atlas.subs
+    (description) A beautiful terminal-based subtitle searcher and downloader.
+    (repo) https://github.com/fezcode/atlas.subs.git
+    (bin) atlas.subs
+    (category) Media
+    (version) 0.1.0
