@@ -279,3 +279,11 @@
     (bin) atlas.subs
     (category) Media
     (version) 0.1.0
+
+  > (tool)
+    (name) villain-couch
+    (description) VLC Tracking application
+    (repo) https://github.com/fezcode/Villain-Couch.git
+    (bin) villain-couch
+    (category) Media
+    (version) 0.2.0
