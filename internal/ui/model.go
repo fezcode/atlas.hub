@@ -20,13 +20,6 @@ const (
 	StateDone
 )
 
-// displayRow is a single row in the scrollable list: either a category header or a tool.
-type displayRow struct {
-	IsCategory bool
-	Category   string
-	ToolIndex  int
-}
-
 type Model struct {
 	Manager          *install.Manager
 	Tools            []model.Tool
@@ -37,12 +30,33 @@ type Model struct {
 	Height           int
 	State            int
 	Quitting         bool
-	ShowDescriptions bool
 	SearchMode       bool
 	SearchQuery      string
 	SpinnerFrame     int
 
-	displayRows []displayRow
+	// Tab navigation
+	ActiveTab  int
+	Categories []string
+
+	// Filtered view
+	filtered []int // indices into Tools
+}
+
+func NewModel(manager *install.Manager, tools []model.Tool, installPath string) Model {
+	for i := range tools {
+		if tools[i].IsHub {
+			tools[i].Selected = true
+		}
+	}
+	m := Model{
+		Manager:     manager,
+		Tools:       tools,
+		InstallPath: installPath,
+		State:       StateList,
+	}
+	m.buildCategories()
+	m.rebuildFiltered()
+	return m
 }
 
 var categoryOrder = []string{
@@ -59,77 +73,52 @@ func categoryRank(cat string) int {
 	return len(categoryOrder)
 }
 
-func NewModel(manager *install.Manager, tools []model.Tool, installPath string) Model {
-	for i := range tools {
-		if tools[i].IsHub {
-			tools[i].Selected = true
-		}
+func (m *Model) buildCategories() {
+	seen := map[string]bool{}
+	for _, t := range m.Tools {
+		seen[t.Category] = true
 	}
-	m := Model{
-		Manager:     manager,
-		Tools:       tools,
-		InstallPath: installPath,
-		State:       StateList,
+	m.Categories = []string{"All"}
+	sorted := make([]string, 0, len(seen))
+	for c := range seen {
+		sorted = append(sorted, c)
 	}
-	m.rebuildRows()
-	return m
+	sort.Slice(sorted, func(i, j int) bool {
+		return categoryRank(sorted[i]) < categoryRank(sorted[j])
+	})
+	m.Categories = append(m.Categories, sorted...)
 }
 
-func (m *Model) rebuildRows() {
-	m.displayRows = nil
+func (m *Model) rebuildFiltered() {
+	m.filtered = nil
+	activeCategory := ""
+	if m.ActiveTab > 0 && m.ActiveTab < len(m.Categories) {
+		activeCategory = m.Categories[m.ActiveTab]
+	}
 
-	groups := map[string][]int{}
 	for i, t := range m.Tools {
+		// Category filter
+		if activeCategory != "" && t.Category != activeCategory {
+			continue
+		}
+		// Search filter
 		if m.SearchQuery != "" {
 			q := strings.ToLower(m.SearchQuery)
 			if !strings.Contains(strings.ToLower(t.Name), q) &&
-				!strings.Contains(strings.ToLower(t.Description), q) &&
-				!strings.Contains(strings.ToLower(t.Category), q) {
+				!strings.Contains(strings.ToLower(t.Description), q) {
 				continue
 			}
 		}
-		groups[t.Category] = append(groups[t.Category], i)
+		m.filtered = append(m.filtered, i)
 	}
 
-	cats := make([]string, 0, len(groups))
-	for c := range groups {
-		cats = append(cats, c)
-	}
-	sort.Slice(cats, func(i, j int) bool {
-		return categoryRank(cats[i]) < categoryRank(cats[j])
-	})
-
-	for _, cat := range cats {
-		m.displayRows = append(m.displayRows, displayRow{IsCategory: true, Category: cat})
-		for _, idx := range groups[cat] {
-			m.displayRows = append(m.displayRows, displayRow{ToolIndex: idx})
-		}
-	}
-
-	if m.Cursor >= len(m.displayRows) {
-		m.Cursor = len(m.displayRows) - 1
+	if m.Cursor >= len(m.filtered) {
+		m.Cursor = len(m.filtered) - 1
 	}
 	if m.Cursor < 0 {
 		m.Cursor = 0
 	}
-	m.skipCategoryRow(1)
-}
-
-func (m *Model) skipCategoryRow(dir int) {
-	if len(m.displayRows) == 0 {
-		return
-	}
-	for m.displayRows[m.Cursor].IsCategory {
-		m.Cursor += dir
-		if m.Cursor < 0 {
-			m.Cursor = 0
-			return
-		}
-		if m.Cursor >= len(m.displayRows) {
-			m.Cursor = len(m.displayRows) - 1
-			return
-		}
-	}
+	m.Top = 0
 }
 
 func (m Model) Init() tea.Cmd {
@@ -164,14 +153,14 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			case "esc":
 				m.SearchMode = false
 				m.SearchQuery = ""
-				m.rebuildRows()
+				m.rebuildFiltered()
 				m.updateViewport()
 			case "enter":
 				m.SearchMode = false
 			case "backspace":
 				if len(m.SearchQuery) > 0 {
 					m.SearchQuery = m.SearchQuery[:len(m.SearchQuery)-1]
-					m.rebuildRows()
+					m.rebuildFiltered()
 					m.updateViewport()
 				}
 			case "ctrl+c":
@@ -180,7 +169,7 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			default:
 				if len(msg.String()) == 1 {
 					m.SearchQuery += msg.String()
-					m.rebuildRows()
+					m.rebuildFiltered()
 					m.updateViewport()
 				}
 			}
@@ -208,13 +197,11 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		case "up", "k":
 			if m.Cursor > 0 {
 				m.Cursor--
-				m.skipCategoryRow(-1)
 				m.updateViewport()
 			}
 		case "down", "j":
-			if m.Cursor < len(m.displayRows)-1 {
+			if m.Cursor < len(m.filtered)-1 {
 				m.Cursor++
-				m.skipCategoryRow(1)
 				m.updateViewport()
 			}
 		case "pgup":
@@ -222,47 +209,60 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			if m.Cursor < 0 {
 				m.Cursor = 0
 			}
-			m.skipCategoryRow(1)
 			m.updateViewport()
 		case "pgdown":
 			m.Cursor += m.listHeight()
-			if m.Cursor >= len(m.displayRows) {
-				m.Cursor = len(m.displayRows) - 1
+			if m.Cursor >= len(m.filtered) {
+				m.Cursor = len(m.filtered) - 1
 			}
-			m.skipCategoryRow(-1)
+			if m.Cursor < 0 {
+				m.Cursor = 0
+			}
 			m.updateViewport()
 		case "home", "g":
 			m.Cursor = 0
-			m.skipCategoryRow(1)
 			m.Top = 0
-			m.updateViewport()
 		case "end", "G":
-			m.Cursor = len(m.displayRows) - 1
-			m.skipCategoryRow(-1)
+			m.Cursor = len(m.filtered) - 1
+			if m.Cursor < 0 {
+				m.Cursor = 0
+			}
 			m.updateViewport()
-		case "h":
-			m.ShowDescriptions = !m.ShowDescriptions
+		case "tab":
+			m.ActiveTab++
+			if m.ActiveTab >= len(m.Categories) {
+				m.ActiveTab = 0
+			}
+			m.rebuildFiltered()
+			m.updateViewport()
+		case "shift+tab":
+			m.ActiveTab--
+			if m.ActiveTab < 0 {
+				m.ActiveTab = len(m.Categories) - 1
+			}
+			m.rebuildFiltered()
+			m.updateViewport()
 		case "/":
 			m.SearchMode = true
 			m.SearchQuery = ""
 		case " ":
-			if m.Cursor >= 0 && m.Cursor < len(m.displayRows) && !m.displayRows[m.Cursor].IsCategory {
-				idx := m.displayRows[m.Cursor].ToolIndex
+			if m.Cursor >= 0 && m.Cursor < len(m.filtered) {
+				idx := m.filtered[m.Cursor]
 				if !m.Tools[idx].IsHub {
 					m.Tools[idx].Selected = !m.Tools[idx].Selected
 				}
 			}
 		case "a":
 			allSelected := true
-			for _, row := range m.displayRows {
-				if !row.IsCategory && !m.Tools[row.ToolIndex].IsHub && !m.Tools[row.ToolIndex].Selected {
+			for _, fi := range m.filtered {
+				if !m.Tools[fi].IsHub && !m.Tools[fi].Selected {
 					allSelected = false
 					break
 				}
 			}
-			for _, row := range m.displayRows {
-				if !row.IsCategory && !m.Tools[row.ToolIndex].IsHub {
-					m.Tools[row.ToolIndex].Selected = !allSelected
+			for _, fi := range m.filtered {
+				if !m.Tools[fi].IsHub {
+					m.Tools[fi].Selected = !allSelected
 				}
 			}
 		case "enter":
@@ -290,17 +290,9 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	return m, nil
 }
 
-// listHeight returns how many rows are available for the scrollable item list.
 func (m Model) listHeight() int {
-	// We use exactly m.Height lines total. Layout:
-	//   line 1: title bar
-	//   line 2: subtitle / info
-	//   line 3: search bar or blank
-	//   line 4..H-2: scrollable list items
-	//   line H-1: status bar
-	//   line H:   help bar
-	// So list area = Height - 5
-	h := m.Height - 5
+	// Layout: title(1) + tabs(1) + separator(1) + list + separator(1) + status(1) + help(1)
+	h := m.Height - 6
 	if h < 1 {
 		h = 1
 	}
@@ -349,47 +341,20 @@ func (m Model) selectedCount() (selected, total int) {
 	return
 }
 
-func (m Model) toolRowCount() int {
-	n := 0
-	for _, r := range m.displayRows {
-		if !r.IsCategory {
-			n++
-		}
-	}
-	return n
-}
-
-func (m Model) cursorToolIndex() int {
-	idx := 0
-	for i, r := range m.displayRows {
-		if r.IsCategory {
-			continue
-		}
-		if i == m.Cursor {
-			return idx
-		}
-		idx++
-	}
-	return idx
-}
-
 // View renders the entire UI into exactly m.Height lines.
 func (m Model) View() string {
 	if m.Quitting {
 		return ""
 	}
-
 	if m.Height == 0 || m.Width == 0 {
 		return "Loading..."
 	}
 
-	// Build lines array — exactly m.Height lines
 	lines := make([]string, m.Height)
 	w := m.Width
 
-	// Line 0: Title bar
-	title := titleStyle.Render(" ATLAS.HUB ") + " " + subtitleStyle.Render("Installer")
-	lines[0] = title
+	// Line 0: Title
+	lines[0] = titleStyle.Render(" ATLAS.HUB ") + " " + subtitleStyle.Render("Suite Installer")
 
 	if m.State == StateList {
 		m.renderList(lines, w)
@@ -400,141 +365,180 @@ func (m Model) View() string {
 	return strings.Join(lines, "\n")
 }
 
-func (m Model) renderList(lines []string, w int) {
-	// Line 1: subtitle
-	sel, total := m.selectedCount()
-	lines[1] = dimTextStyle.Render(fmt.Sprintf("Select tools to install (%d/%d selected)", sel, total))
-
-	// Line 2: search or link
-	if m.SearchMode {
-		lines[2] = searchStyle.Render(" / ") + searchInputStyle.Render(m.SearchQuery) + searchStyle.Render("_")
-	} else if m.SearchQuery != "" {
-		lines[2] = searchStyle.Render(" Filter: ") + searchInputStyle.Render(m.SearchQuery) +
-			dimTextStyle.Render(fmt.Sprintf(" (%d results)", m.toolRowCount()))
-	} else {
-		lines[2] = faintTextStyle.Render("https://github.com/stars/fezcode/lists/atlas")
+func (m Model) renderTabs(w int) string {
+	var tabs []string
+	for i, cat := range m.Categories {
+		if i == m.ActiveTab {
+			tabs = append(tabs, activeTabStyle.Render(" "+cat+" "))
+		} else {
+			tabs = append(tabs, inactiveTabStyle.Render(" "+cat+" "))
+		}
 	}
 
-	// Lines 3..H-3: scrollable list
+	row := strings.Join(tabs, tabGapStyle.Render(" "))
+
+	// If search is active, show it on the right
+	if m.SearchMode {
+		search := searchStyle.Render("/") + searchInputStyle.Render(m.SearchQuery) + searchStyle.Render("_")
+		gap := w - lipgloss.Width(row) - lipgloss.Width(search) - 2
+		if gap > 0 {
+			row = row + strings.Repeat(" ", gap) + search
+		}
+	} else if m.SearchQuery != "" {
+		search := searchStyle.Render("filter: ") + searchInputStyle.Render(m.SearchQuery)
+		gap := w - lipgloss.Width(row) - lipgloss.Width(search) - 2
+		if gap > 0 {
+			row = row + strings.Repeat(" ", gap) + search
+		}
+	}
+
+	return row
+}
+
+func (m Model) renderList(lines []string, w int) {
+	// Line 1: Tab bar
+	lines[1] = " " + m.renderTabs(w)
+
+	// Line 2: Separator
+	lines[2] = separatorStyle.Render(strings.Repeat("─", w))
+
+	// Lines 3..H-3: Items
 	listH := m.listHeight()
 	end := m.Top + listH
-	if end > len(m.displayRows) {
-		end = len(m.displayRows)
+	if end > len(m.filtered) {
+		end = len(m.filtered)
 	}
 
+	// Compute column widths
+	nameCol := 20
+	for _, fi := range m.filtered {
+		if l := len(m.Tools[fi].Name); l > nameCol {
+			nameCol = l
+		}
+	}
+	nameCol += 1 // padding
+
+	verCol := 10
+	statusCol := 12
+
 	lineIdx := 3
-	for i := m.Top; i < end && lineIdx < m.Height-2; i++ {
-		row := m.displayRows[i]
+	for i := m.Top; i < end && lineIdx < m.Height-3; i++ {
+		tool := m.Tools[m.filtered[i]]
+		isCurrent := i == m.Cursor
 
-		if row.IsCategory {
-			icon := categoryIcon(row.Category)
-			lines[lineIdx] = " " + categoryStyle.Render(icon+" "+strings.ToUpper(row.Category))
-			lineIdx++
-			continue
+		// Col 1: cursor + checkbox (4 chars)
+		cursor := "  "
+		if isCurrent {
+			cursor = cursorStyle.Render("› ")
 		}
 
-		tool := m.Tools[row.ToolIndex]
-
-		// Cursor
-		cursor := "   "
-		if m.Cursor == i {
-			cursor = " " + cursorStyle.Render("❯") + " "
-		}
-
-		// Checkbox
 		check := checkboxStyle.Render("○")
 		if tool.Selected {
 			check = checkedStyle.Render("●")
 		}
 
-		// Name
-		name := tool.Name
-		if m.Cursor == i {
-			name = highlightStyle.Render(name)
+		// Col 2: name (fixed width)
+		nameTxt := tool.Name
+		padded := nameTxt + strings.Repeat(" ", nameCol-len(nameTxt))
+		if isCurrent {
+			padded = highlightStyle.Render(nameTxt) + strings.Repeat(" ", nameCol-len(nameTxt))
+		} else {
+			padded = nameStyle.Render(nameTxt) + strings.Repeat(" ", nameCol-len(nameTxt))
 		}
 
-		// Badge
-		badge := ""
+		// Col 3: version (fixed width)
+		ver := ""
+		if tool.InstalledVersion != "" {
+			ver = tool.InstalledVersion
+		} else if tool.LatestVersion != "" {
+			ver = tool.LatestVersion
+		}
+		verPad := ver + strings.Repeat(" ", verCol-len(ver))
+		if len(ver) > verCol {
+			verPad = ver[:verCol]
+		}
+		verRendered := versionDimStyle.Render(verPad)
+
+		// Col 4: status badge (fixed width)
+		status := ""
 		if tool.InstalledVersion != "" {
 			if tool.InstalledVersion != tool.LatestVersion && tool.LatestVersion != "" {
-				badge = " " + updateBadge.Render(tool.InstalledVersion+" -> "+tool.LatestVersion)
+				s := "update"
+				status = updateBadge.Render(s) + strings.Repeat(" ", statusCol-len(s))
 			} else {
-				badge = " " + installedBadge.Render("✓") + " " + versionDimStyle.Render("v"+tool.InstalledVersion)
+				s := "installed"
+				status = installedBadge.Render(s) + strings.Repeat(" ", statusCol-len(s))
 			}
-		} else if tool.LatestVersion != "" {
-			badge = " " + versionDimStyle.Render("v"+tool.LatestVersion)
+		} else {
+			status = strings.Repeat(" ", statusCol)
 		}
 
-		line := cursor + check + " " + name + badge
-
-		// Description
-		if m.ShowDescriptions && tool.Description != "" {
-			used := lipgloss.Width(line)
-			avail := w - used - 4
-			if avail > 10 {
-				desc := tool.Description
-				if len(desc) > avail {
-					desc = desc[:avail-3] + "..."
-				}
-				line += " " + descriptionStyle.Render("- "+desc)
+		// Col 5: description (fill remaining)
+		desc := ""
+		used := 4 + nameCol + verCol + statusCol + 1
+		avail := w - used
+		if avail > 10 && tool.Description != "" {
+			d := tool.Description
+			if len(d) > avail {
+				d = d[:avail-3] + "..."
 			}
+			desc = descriptionStyle.Render(d)
 		}
 
-		lines[lineIdx] = line
+		lines[lineIdx] = cursor + check + " " + padded + verRendered + status + desc
 		lineIdx++
 	}
 
-	// Scroll indicator on right side of list area
-	if len(m.displayRows) > listH {
-		// Show a scroll position hint at the last list line
-		pos := ""
-		if m.Top > 0 && end < len(m.displayRows) {
-			pos = scrollStyle.Render(fmt.Sprintf("  [%d-%d of %d]", m.Top+1, end, len(m.displayRows)))
-		} else if m.Top > 0 {
-			pos = scrollStyle.Render("  [end]")
-		} else {
-			pos = scrollStyle.Render(fmt.Sprintf("  [1-%d of %d]", end, len(m.displayRows)))
-		}
-		// Place on the last empty list line, or append to last used line
-		if lineIdx < m.Height-2 {
-			lines[lineIdx] = pos
-		} else {
-			lines[m.Height-3] = lines[m.Height-3] + pos
-		}
-	}
+	// Line H-3: Separator
+	sepLine := m.Height - 3
+	lines[sepLine] = separatorStyle.Render(strings.Repeat("─", w))
 
-	// Line H-2: status bar
+	// Line H-2: Status bar
+	sel, total := m.selectedCount()
 	statusLine := m.Height - 2
-	toolIdx := m.cursorToolIndex() + 1
-	toolTotal := m.toolRowCount()
+
 	left := fmt.Sprintf(" %d/%d selected", sel, total)
-	right := fmt.Sprintf(" %d/%d ", toolIdx, toolTotal)
+
+	// Pagination info
+	page, totalPages := m.pageInfo()
+	right := fmt.Sprintf(" %d of %d   page %d/%d ", m.Cursor+1, len(m.filtered), page, totalPages)
+
 	gap := w - lipgloss.Width(left) - lipgloss.Width(right)
 	if gap < 0 {
 		gap = 0
 	}
 	barContent := left + strings.Repeat(" ", gap) + right
-	lines[statusLine] = lipgloss.NewStyle().
-		Foreground(purple).
-		Background(statusBarBg).
-		Bold(true).
-		Width(w).
-		Render(barContent)
+	lines[statusLine] = statusBarStyle.Width(w).Render(barContent)
 
-	// Line H-1: help bar
+	// Line H-1: Help
 	helpLine := m.Height - 1
-	lines[helpLine] = helpKeyStyle.Render(" j/k") + helpStyle.Render(" nav ") +
-		helpKeyStyle.Render("space") + helpStyle.Render(" sel ") +
-		helpKeyStyle.Render("a") + helpStyle.Render(" all ") +
-		helpKeyStyle.Render("h") + helpStyle.Render(" desc ") +
-		helpKeyStyle.Render("/") + helpStyle.Render(" find ") +
-		helpKeyStyle.Render("pgup/dn") + helpStyle.Render(" page ") +
-		helpKeyStyle.Render("enter") + helpStyle.Render(" install ") +
+	lines[helpLine] = " " +
+		helpKeyStyle.Render("j/k") + helpStyle.Render(" nav  ") +
+		helpKeyStyle.Render("space") + helpStyle.Render(" select  ") +
+		helpKeyStyle.Render("a") + helpStyle.Render(" all  ") +
+		helpKeyStyle.Render("tab") + helpStyle.Render(" category  ") +
+		helpKeyStyle.Render("/") + helpStyle.Render(" search  ") +
+		helpKeyStyle.Render("enter") + helpStyle.Render(" install  ") +
 		helpKeyStyle.Render("q") + helpStyle.Render(" quit")
 }
 
+func (m Model) pageInfo() (page, totalPages int) {
+	h := m.listHeight()
+	if h <= 0 {
+		return 1, 1
+	}
+	totalPages = (len(m.filtered) + h - 1) / h
+	if totalPages < 1 {
+		totalPages = 1
+	}
+	page = (m.Top / h) + 1
+	if page > totalPages {
+		page = totalPages
+	}
+	return
+}
+
 func (m Model) renderProgress(lines []string, w int) {
-	// Gather selected tools
 	type selTool struct {
 		tool  model.Tool
 		index int
@@ -546,7 +550,6 @@ func (m Model) renderProgress(lines []string, w int) {
 		}
 	}
 
-	// Line 1: blank
 	lines[1] = ""
 
 	if len(selected) == 0 {
@@ -554,7 +557,6 @@ func (m Model) renderProgress(lines []string, w int) {
 		return
 	}
 
-	// Counts
 	done, errors := 0, 0
 	for _, st := range selected {
 		switch st.tool.Status {
@@ -566,7 +568,7 @@ func (m Model) renderProgress(lines []string, w int) {
 	}
 	total := len(selected)
 
-	// Line 2: progress bar
+	// Progress bar
 	barWidth := 30
 	if w > 80 {
 		barWidth = 40
@@ -577,10 +579,17 @@ func (m Model) renderProgress(lines []string, w int) {
 	}
 	bar := progressFilledStyle.Render(strings.Repeat("█", filled)) +
 		progressEmptyStyle.Render(strings.Repeat("░", barWidth-filled))
-	lines[2] = fmt.Sprintf("  %s %s", bar,
-		dimTextStyle.Render(fmt.Sprintf("%d/%d", done+errors, total)))
+	pct := 0
+	if total > 0 {
+		pct = (done + errors) * 100 / total
+	}
+	lines[2] = fmt.Sprintf("  %s %s %s",
+		bar,
+		dimTextStyle.Render(fmt.Sprintf("%d/%d", done+errors, total)),
+		dimTextStyle.Render(fmt.Sprintf("(%d%%)", pct)))
 
-	// Lines 3+: tool statuses
+	lines[3] = ""
+
 	spinnerFrames := []string{"⠋", "⠙", "⠹", "⠸", "⠼", "⠴", "⠦", "⠧", "⠇", "⠏"}
 	spinner := spinnerFrames[m.SpinnerFrame%len(spinnerFrames)]
 
@@ -599,20 +608,20 @@ func (m Model) renderProgress(lines []string, w int) {
 			status = "installing..."
 			style = statusInstallingStyle
 		case "done":
-			icon = statusDoneStyle.Render("✓")
+			icon = statusDoneStyle.Render("OK")
 			status = "done"
 			style = statusDoneStyle
 		case "error":
-			icon = statusErrorStyle.Render("✗")
+			icon = statusErrorStyle.Render("!!")
 			status = "error"
 			style = statusErrorStyle
 		default:
-			icon = statusPendingStyle.Render("○")
+			icon = statusPendingStyle.Render("..")
 			status = "waiting"
 			style = statusPendingStyle
 		}
 
-		lines[lineIdx] = fmt.Sprintf("  %s %s %s", icon, st.tool.Name, style.Render(status))
+		lines[lineIdx] = fmt.Sprintf("  %s  %-25s %s", icon, st.tool.Name, style.Render(status))
 		lineIdx++
 
 		if st.tool.Status == "error" && st.tool.Error != nil && lineIdx < m.Height-2 {
@@ -620,19 +629,18 @@ func (m Model) renderProgress(lines []string, w int) {
 			if len(errMsg) > 60 {
 				errMsg = errMsg[:57] + "..."
 			}
-			lines[lineIdx] = "    " + statusErrorStyle.Render(errMsg)
+			lines[lineIdx] = "      " + statusErrorStyle.Render(errMsg)
 			lineIdx++
 		}
 	}
 
-	// Footer
 	if m.State == StateDone {
 		helpIdx := m.Height - 2
 		if errors > 0 {
-			lines[helpIdx] = "  " + statusDoneStyle.Render(fmt.Sprintf("✓ %d installed", done)) +
-				"  " + statusErrorStyle.Render(fmt.Sprintf("✗ %d failed", errors))
+			lines[helpIdx] = "  " + statusDoneStyle.Render(fmt.Sprintf("%d installed", done)) +
+				"  " + statusErrorStyle.Render(fmt.Sprintf("%d failed", errors))
 		} else {
-			lines[helpIdx] = "  " + statusDoneStyle.Render(fmt.Sprintf("✓ All %d tools installed!", done))
+			lines[helpIdx] = "  " + statusDoneStyle.Render(fmt.Sprintf("All %d tools installed successfully.", done))
 		}
 		lines[m.Height-1] = "  " + dimTextStyle.Render("Path: "+m.InstallPath) +
 			"  " + helpKeyStyle.Render("q") + helpStyle.Render("/") +
@@ -640,34 +648,5 @@ func (m Model) renderProgress(lines []string, w int) {
 	} else {
 		lines[m.Height-1] = "  " + dimTextStyle.Render("Installing... ") +
 			helpKeyStyle.Render("ctrl+c") + helpStyle.Render(" cancel")
-	}
-}
-
-func categoryIcon(cat string) string {
-	switch cat {
-	case "Core":
-		return "◆"
-	case "Development":
-		return "⚙"
-	case "System":
-		return "⊞"
-	case "Productivity":
-		return "▶"
-	case "Security":
-		return "◈"
-	case "CLI":
-		return "⌘"
-	case "Utility":
-		return "◇"
-	case "Media":
-		return "♫"
-	case "Entertainment":
-		return "★"
-	case "Fun":
-		return "✦"
-	case "Lifestyle":
-		return "♥"
-	default:
-		return "·"
 	}
 }

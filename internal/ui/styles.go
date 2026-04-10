@@ -4,93 +4,114 @@ import "github.com/charmbracelet/lipgloss"
 
 var (
 	// Colors
-	purple      = lipgloss.Color("#6B50FF")
-	brightGreen = lipgloss.Color("#00D787")
-	cyan        = lipgloss.Color("#00D7FF")
-	pink        = lipgloss.Color("#FF5F87")
-	dimGray     = lipgloss.Color("#555555")
-	midGray     = lipgloss.Color("#626262")
-	lightGray   = lipgloss.Color("#888888")
-	faintGray   = lipgloss.Color("#444444")
-	white       = lipgloss.Color("#FFFDF5")
-	yellow      = lipgloss.Color("#FFD700")
+	accent      = lipgloss.Color("#0EA5E9")
+	accentLight = lipgloss.Color("#7DD3FC")
+	mint        = lipgloss.Color("#34D399")
+	sky         = lipgloss.Color("#38BDF8")
+	rose        = lipgloss.Color("#FB7185")
+	dimGray     = lipgloss.Color("#4B5563")
+	midGray     = lipgloss.Color("#6B7280")
+	lightGray   = lipgloss.Color("#9CA3AF")
+	faintGray   = lipgloss.Color("#374151")
+	white       = lipgloss.Color("#F9FAFB")
+	amber       = lipgloss.Color("#FBBF24")
+	darkBg      = lipgloss.Color("#0F172A")
 
+	// Title
 	titleStyle = lipgloss.NewStyle().
 			Foreground(white).
-			Background(purple).
+			Background(accent).
 			Padding(0, 1).
 			Bold(true)
 
 	subtitleStyle = lipgloss.NewStyle().
-			Foreground(lipgloss.Color("#B3B3FF")).
+			Foreground(accentLight).
 			Bold(true)
 
-	dimTextStyle = lipgloss.NewStyle().
-			Foreground(midGray)
+	// Tabs
+	activeTabStyle = lipgloss.NewStyle().
+			Foreground(white).
+			Background(accent).
+			Bold(true).
+			Padding(0, 1)
 
-	faintTextStyle = lipgloss.NewStyle().
+	inactiveTabStyle = lipgloss.NewStyle().
+				Foreground(midGray).
+				Padding(0, 1)
+
+	tabGapStyle = lipgloss.NewStyle().
 			Foreground(faintGray)
 
-	categoryStyle = lipgloss.NewStyle().
-			Foreground(purple).
-			Bold(true)
+	// Separators
+	separatorStyle = lipgloss.NewStyle().
+			Foreground(faintGray)
 
+	// List items
 	cursorStyle = lipgloss.NewStyle().
-			Foreground(lipgloss.Color("212")).
+			Foreground(accent).
 			Bold(true)
 
 	highlightStyle = lipgloss.NewStyle().
-			Foreground(lipgloss.Color("212")).
+			Foreground(white).
 			Bold(true)
+
+	nameStyle = lipgloss.NewStyle().
+			Foreground(lipgloss.Color("#D1D5DB"))
 
 	checkboxStyle = lipgloss.NewStyle().
 			Foreground(dimGray)
 
 	checkedStyle = lipgloss.NewStyle().
-			Foreground(brightGreen)
+			Foreground(mint)
 
 	installedBadge = lipgloss.NewStyle().
-			Foreground(brightGreen).
-			Bold(true)
+			Foreground(mint)
 
 	updateBadge = lipgloss.NewStyle().
-			Foreground(cyan).
+			Foreground(sky).
 			Bold(true)
 
 	versionDimStyle = lipgloss.NewStyle().
 			Foreground(dimGray)
 
-	statusBarBg = lipgloss.Color("#282828")
+	descriptionStyle = lipgloss.NewStyle().
+				Foreground(lipgloss.Color("#666666")).
+				Italic(true)
 
+	// Status bar
+	statusBarStyle = lipgloss.NewStyle().
+			Foreground(lipgloss.Color("#AAAAAA")).
+			Background(darkBg)
+
+	// Search
 	searchStyle = lipgloss.NewStyle().
-			Foreground(yellow).
+			Foreground(amber).
 			Bold(true)
 
 	searchInputStyle = lipgloss.NewStyle().
 				Foreground(white).
 				Bold(true)
 
-	statusPendingStyle    = lipgloss.NewStyle().Foreground(midGray)
-	statusInstallingStyle = lipgloss.NewStyle().Foreground(cyan).Bold(true)
-	statusDoneStyle       = lipgloss.NewStyle().Foreground(brightGreen).Bold(true)
-	statusErrorStyle      = lipgloss.NewStyle().Foreground(pink).Bold(true)
-
-	helpStyle = lipgloss.NewStyle().
+	// Text
+	dimTextStyle = lipgloss.NewStyle().
 			Foreground(midGray)
+
+	// Help bar
+	helpStyle = lipgloss.NewStyle().
+			Foreground(dimGray)
 
 	helpKeyStyle = lipgloss.NewStyle().
 			Foreground(lightGray).
 			Bold(true)
 
-	descriptionStyle = lipgloss.NewStyle().
-				Foreground(lightGray).
-				Italic(true)
-
-	scrollStyle = lipgloss.NewStyle().
-			Foreground(dimGray)
+	// Progress
+	statusPendingStyle    = lipgloss.NewStyle().Foreground(midGray)
+	statusInstallingStyle = lipgloss.NewStyle().Foreground(sky).Bold(true)
+	statusDoneStyle       = lipgloss.NewStyle().Foreground(mint).Bold(true)
+	statusErrorStyle      = lipgloss.NewStyle().Foreground(rose).Bold(true)
 
 	progressFilledStyle = lipgloss.NewStyle().
-				Foreground(brightGreen)
+				Foreground(mint)
 
 	progressEmptyStyle = lipgloss.NewStyle().
 				Foreground(faintGray)
