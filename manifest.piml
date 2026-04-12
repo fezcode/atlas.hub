@@ -287,3 +287,11 @@
     (bin) villain-couch
     (category) Media
     (version) 0.2.0
+
+  > (tool)
+    (name) yap
+    (description) YouTube Audio Player TUI
+    (repo) https://github.com/fezcode/yap.git
+    (bin) yap
+    (category) Media
+    (version) 0.1.0
