@@ -400,7 +400,11 @@ func (m Model) renderList(lines []string, w int) {
 	lines[1] = " " + m.renderTabs(w)
 
 	// Line 2: Separator
-	lines[2] = separatorStyle.Render(strings.Repeat("─", w))
+	sepW := w
+	if sepW < 0 {
+		sepW = 0
+	}
+	lines[2] = separatorStyle.Render(strings.Repeat("─", sepW))
 
 	// Lines 3..H-3: Items
 	listH := m.listHeight()
@@ -419,6 +423,17 @@ func (m Model) renderList(lines []string, w int) {
 	nameCol += 1 // padding
 
 	verCol := 10
+	for _, fi := range m.filtered {
+		t := m.Tools[fi]
+		if l := len(t.InstalledVersion); l > verCol {
+			verCol = l
+		}
+		if l := len(t.LatestVersion); l > verCol {
+			verCol = l
+		}
+	}
+	verCol += 1 // padding
+
 	statusCol := 12
 
 	lineIdx := 3
@@ -439,11 +454,15 @@ func (m Model) renderList(lines []string, w int) {
 
 		// Col 2: name (fixed width)
 		nameTxt := tool.Name
-		padded := nameTxt + strings.Repeat(" ", nameCol-len(nameTxt))
+		namePadding := nameCol - len(nameTxt)
+		if namePadding < 0 {
+			namePadding = 0
+		}
+		padded := nameTxt + strings.Repeat(" ", namePadding)
 		if isCurrent {
-			padded = highlightStyle.Render(nameTxt) + strings.Repeat(" ", nameCol-len(nameTxt))
+			padded = highlightStyle.Render(nameTxt) + strings.Repeat(" ", namePadding)
 		} else {
-			padded = nameStyle.Render(nameTxt) + strings.Repeat(" ", nameCol-len(nameTxt))
+			padded = nameStyle.Render(nameTxt) + strings.Repeat(" ", namePadding)
 		}
 
 		// Col 3: version (fixed width)
@@ -453,8 +472,11 @@ func (m Model) renderList(lines []string, w int) {
 		} else if tool.LatestVersion != "" {
 			ver = tool.LatestVersion
 		}
-		verPad := ver + strings.Repeat(" ", verCol-len(ver))
-		if len(ver) > verCol {
+		verPad := ver
+		verPadding := verCol - len(ver)
+		if verPadding > 0 {
+			verPad = ver + strings.Repeat(" ", verPadding)
+		} else if len(ver) > verCol {
 			verPad = ver[:verCol]
 		}
 		verRendered := versionDimStyle.Render(verPad)
@@ -464,13 +486,25 @@ func (m Model) renderList(lines []string, w int) {
 		if tool.InstalledVersion != "" {
 			if tool.InstalledVersion != tool.LatestVersion && tool.LatestVersion != "" {
 				s := "update"
-				status = updateBadge.Render(s) + strings.Repeat(" ", statusCol-len(s))
+				statusPadding := statusCol - len(s)
+				if statusPadding < 0 {
+					statusPadding = 0
+				}
+				status = updateBadge.Render(s) + strings.Repeat(" ", statusPadding)
 			} else {
 				s := "installed"
-				status = installedBadge.Render(s) + strings.Repeat(" ", statusCol-len(s))
+				statusPadding := statusCol - len(s)
+				if statusPadding < 0 {
+					statusPadding = 0
+				}
+				status = installedBadge.Render(s) + strings.Repeat(" ", statusPadding)
 			}
 		} else {
-			status = strings.Repeat(" ", statusCol)
+			statusPadding := statusCol
+			if statusPadding < 0 {
+				statusPadding = 0
+			}
+			status = strings.Repeat(" ", statusPadding)
 		}
 
 		// Col 5: description (fill remaining)
@@ -491,7 +525,11 @@ func (m Model) renderList(lines []string, w int) {
 
 	// Line H-3: Separator
 	sepLine := m.Height - 3
-	lines[sepLine] = separatorStyle.Render(strings.Repeat("─", w))
+	sepW2 := w
+	if sepW2 < 0 {
+		sepW2 = 0
+	}
+	lines[sepLine] = separatorStyle.Render(strings.Repeat("─", sepW2))
 
 	// Line H-2: Status bar
 	sel, total := m.selectedCount()
