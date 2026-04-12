@@ -158,7 +158,7 @@
     (repo) https://github.com/fezcode/atlas.convert
     (bin) atlas.convert
     (category) Media
-    (version) 0.3.0
+    (version) 0.3.1
 
   > (tool)
     (name) atlas.conquistador
@@ -182,7 +182,7 @@
     (repo) https://github.com/fezcode/atlas.cat
     (bin) atlas.cat
     (category) CLI
-    (version) 0.1.0
+    (version) 0.2.0
 
   > (tool)
     (name) atlas.ed
