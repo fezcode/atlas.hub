@@ -664,11 +664,20 @@ func (m Model) renderProgress(lines []string, w int) {
 
 		if st.tool.Status == "error" && st.tool.Error != nil && lineIdx < m.Height-2 {
 			errMsg := st.tool.Error.Error()
-			if len(errMsg) > 60 {
-				errMsg = errMsg[:57] + "..."
+			avail := w - 8
+			if avail < 20 {
+				avail = 20
 			}
-			lines[lineIdx] = "      " + statusErrorStyle.Render(errMsg)
-			lineIdx++
+
+			wrapped := lipgloss.NewStyle().Width(avail).Render(errMsg)
+			errLines := strings.Split(wrapped, "\n")
+			for _, el := range errLines {
+				if lineIdx >= m.Height-2 {
+					break
+				}
+				lines[lineIdx] = "      " + statusErrorStyle.Render(el)
+				lineIdx++
+			}
 		}
 	}
 
