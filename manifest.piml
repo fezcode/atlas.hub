@@ -295,3 +295,11 @@
     (bin) yap
     (category) Media
     (version) 0.1.1
+
+  > (tool)
+    (name) atlas.tones
+    (description) iPhone Ringtone and Notification Sound Manager.
+    (repo) https://github.com/fezcode/atlas.tones.git
+    (bin) atlas.tones
+    (category) Media
+    (version) 0.2.23
