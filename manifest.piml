@@ -303,3 +303,11 @@
     (bin) atlas.tones
     (category) Media
     (version) 0.2.24
+
+  > (tool)
+    (name) atlas.pilot
+    (description) Premium remote PC pilot - Control windows, mouse, and system over WiFi.
+    (repo) https://github.com/fezcode/atlas.pilot
+    (bin) atlas.pilot
+    (category) System
+    (version) 0.5.4
