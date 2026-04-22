@@ -311,3 +311,11 @@
     (bin) atlas.pilot
     (category) system
     (version) 0.5.4
+
+  > (tool)
+    (name) atlas.quote
+    (description) A cowsay-like quote generator for the terminal with a rainbow color mode.
+    (repo) https://github.com/fezcode/atlas.quote.git
+    (bin) atlas.quote
+    (category) media
+    (version) 0.1.0
