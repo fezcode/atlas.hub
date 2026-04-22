@@ -6,7 +6,7 @@
     (bin) atlas.hub
     (category) dev
     (is_hub) true
-    (version) 0.4.23
+    (version) 0.4.24
 
   > (tool)
     (name) atlas.radio
