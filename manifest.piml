@@ -4,7 +4,7 @@
     (description) The centralized installer and manager for the Atlas Suite.
     (repo) https://github.com/fezcode/atlas.hub
     (bin) atlas.hub
-    (category) Core
+    (category) dev
     (is_hub) true
     (version) 0.4.23
 
@@ -13,7 +13,7 @@
     (description) Global terminal radio receiver for Atlas Suite.
     (repo) https://github.com/fezcode/atlas.radio
     (bin) atlas.radio
-    (category) Entertainment
+    (category) network
     (version) 0.3.1
 
   > (tool)
@@ -21,7 +21,7 @@
     (description) High-fidelity interactive process reaper.
     (repo) https://github.com/fezcode/atlas.grave
     (bin) atlas.grave
-    (category) System
+    (category) system
     (version) 0.1.4
 
   > (tool)
@@ -29,7 +29,7 @@
     (description) Retro-future industrial mock API server.
     (repo) https://github.com/fezcode/atlas.facade
     (bin) atlas.facade
-    (category) Development
+    (category) network
     (version) 0.1.2
 
   > (tool)
@@ -37,7 +37,7 @@
     (description) A collection of aesthetic terminal screensavers (Pipes, Stars, Matrix, Bouncing).
     (repo) https://github.com/fezcode/atlas.screensaver
     (bin) atlas.screensaver
-    (category) Entertainment
+    (category) system
     (version) 0.3.1
 
   > (tool)
@@ -45,7 +45,7 @@
     (description) A fast, minimalist, local-first TUI task manager.
     (repo) https://github.com/fezcode/atlas.todo
     (bin) atlas.todo
-    (category) Productivity
+    (category) productivity
     (version) 0.5.1
 
   > (tool)
@@ -53,7 +53,7 @@
     (description) Real-time system monitoring (CPU, RAM, Disk, Network).
     (repo) https://github.com/fezcode/atlas.stats
     (bin) atlas.stats
-    (category) System
+    (category) system
     (version) 0.1.2
 
   > (tool)
@@ -61,7 +61,7 @@
     (description) Blazing fast CLI search tool (DDG, Wiki, HN, Reddit).
     (repo) https://github.com/fezcode/atlas.websearch
     (bin) atlas.websearch
-    (category) Productivity
+    (category) network
     (version) 0.1.3
 
   > (tool)
@@ -69,7 +69,7 @@
     (description) Secure, local-first terminal password manager.
     (repo) https://github.com/fezcode/atlas.compass
     (bin) atlas.compass
-    (category) Security
+    (category) security
     (version) 0.1.1
 
   > (tool)
@@ -77,7 +77,7 @@
     (description) High-visibility world clock dashboard.
     (repo) https://github.com/fezcode/atlas.clock
     (bin) atlas.clock
-    (category) Productivity
+    (category) productivity
     (version) 0.1.2
 
   > (tool)
@@ -85,7 +85,7 @@
     (description) Terminal webcam viewer and ASCII camera.
     (repo) https://github.com/fezcode/atlas.cam
     (bin) atlas.cam
-    (category) Media
+    (category) media
     (version) 0.1.3
 
   > (tool)
@@ -93,7 +93,7 @@
     (description) Terminal-based game collection (Wilson's Revenge).
     (repo) https://github.com/fezcode/atlas.games
     (bin) atlas.games
-    (category) Entertainment
+    (category) games
     (version) 0.6.0
 
   > (tool)
@@ -101,7 +101,7 @@
     (description) High-performance benchmarking tool for CLI commands.
     (repo) https://github.com/fezcode/atlas.bench
     (bin) atlas.bench
-    (category) Development
+    (category) dev
     (version) 0.1.3
 
   > (tool)
@@ -109,7 +109,7 @@
     (description) Minimalist PIML processor (inspired by jq).
     (repo) https://github.com/fezcode/atlas.pq
     (bin) atlas.pq
-    (category) CLI
+    (category) data
     (version) 0.1.1
 
   > (tool)
@@ -117,7 +117,7 @@
     (description) Git workspace monitor for multiple repositories.
     (repo) https://github.com/fezcode/atlas.radar
     (bin) atlas.radar
-    (category) Development
+    (category) dev
     (version) 0.1.7
 
   > (tool)
@@ -125,7 +125,7 @@
     (description) Minimalist, secure terminal TOTP (2FA) manager.
     (repo) https://github.com/fezcode/atlas.otp
     (bin) atlas.otp
-    (category) Security
+    (category) security
     (version) 0.1.2
 
   > (tool)
@@ -133,7 +133,7 @@
     (description) High-visibility side-by-side terminal diff tool.
     (repo) https://github.com/fezcode/atlas.diff
     (bin) atlas.diff
-    (category) Development
+    (category) dev
     (version) 0.1.3
 
   > (tool)
@@ -141,7 +141,7 @@
     (description) Interactive TUI command deck for project workflows and automation.
     (repo) https://github.com/fezcode/atlas.deck
     (bin) atlas.deck
-    (category) Productivity
+    (category) productivity
     (version) 0.1.4
 
   > (tool)
@@ -149,7 +149,7 @@
     (description) Fast, minimalist terminal utility for generating and comparing file hashes.
     (repo) https://github.com/fezcode/atlas.hash
     (bin) atlas.hash
-    (category) Utility
+    (category) data
     (version) 0.1.0
 
   > (tool)
@@ -157,7 +157,7 @@
     (description) Image conversion tool for JPEG, PNG, and HEIC
     (repo) https://github.com/fezcode/atlas.convert
     (bin) atlas.convert
-    (category) Media
+    (category) media
     (version) 0.3.1
 
   > (tool)
@@ -165,7 +165,7 @@
     (description) A powerful and beautiful terminal-based file explorer like Finder or Windows Explorer.
     (repo) https://github.com/fezcode/atlas.conquistador
     (bin) atlas.conquistador
-    (category) System
+    (category) data
     (version) 0.4.0
 
   > (tool)
@@ -173,7 +173,7 @@
     (description) High-fidelity environmental and weather dashboard with atmospheric monitoring.
     (repo) https://github.com/fezcode/atlas.horizon
     (bin) atlas.horizon
-    (category) Productivity
+    (category) system
     (version) 0.1.0
 
   > (tool)
@@ -181,7 +181,7 @@
     (description) A beautiful, high-performance terminal text viewer with syntax highlighting and line numbers.
     (repo) https://github.com/fezcode/atlas.cat
     (bin) atlas.cat
-    (category) CLI
+    (category) dev
     (version) 0.3.5
 
   > (tool)
@@ -189,7 +189,7 @@
     (description) A beautiful, high-performance terminal text editor with syntax highlighting, line numbers, and search.
     (repo) https://github.com/fezcode/atlas.ed
     (bin) atlas.ed
-    (category) Development
+    (category) dev
     (version) 0.4.1
 
   > (tool)
@@ -197,7 +197,7 @@
     (description) Interactive TUI color picker and converter (Hex, RGB, HSL).
     (repo) https://github.com/fezcode/atlas.color.git
     (bin) atlas.color
-    (category) Fun
+    (category) dev
     (version) 0.1.0
 
   > (tool)
@@ -205,7 +205,7 @@
     (description) Fast, minimal tool to fetch your local and public IP address with geolocation data.
     (repo) https://github.com/fezcode/atlas.ip.git
     (bin) atlas.ip
-    (category) System
+    (category) system
     (version) 0.1.0
 
   > (tool)
@@ -213,7 +213,7 @@
     (description) Terminal-based SQL client for SQLite and PostgreSQL with syntax highlighting.
     (repo) https://github.com/fezcode/atlas.sql
     (bin) atlas.sql
-    (category) Development
+    (category) data
     (version) 0.2.0
 
   > (tool)
@@ -221,7 +221,7 @@
     (description) Interactive terminal-based falling sand and particle physics simulator.
     (repo) https://github.com/fezcode/atlas.sand
     (bin) atlas.sand
-    (category) Fun
+    (category) games
     (version) 0.1.0
 
   > (tool)
@@ -229,7 +229,7 @@
     (description) Comprehensive TUI git client with graphs, branch, tag, and multi-repo management.
     (repo) https://github.com/fezcode/atlas.gitty
     (bin) atlas.gitty
-    (category) Development
+    (category) dev
     (version) 0.4.3
 
   > (tool)
@@ -237,7 +237,7 @@
     (description) A personal health and wellness tracker for calories, gym activities, and mood.
     (repo) https://github.com/fezcode/atlas.guide.git
     (bin) atlas.guide
-    (category) Lifestyle
+    (category) productivity
     (version) 0.3.0
 
   > (tool)
@@ -245,7 +245,7 @@
     (description) A beautiful terminal-based markdown note manager.
     (repo) https://github.com/fezcode/atlas.notes
     (bin) atlas.notes
-    (category) Productivity
+    (category) productivity
     (version) 0.1.0
 
   > (tool)
@@ -253,7 +253,7 @@
     (description) A powerful batch downloader that processes multiple URLs from text files.
     (repo) https://github.com/fezcode/atlas.batchdown
     (bin) atlas.batchdown
-    (category) Productivity
+    (category) media
     (version) 0.1.0
 
   > (tool)
@@ -261,7 +261,7 @@
     (description) A beautiful TUI image burner application for OS images and USB drives.
     (repo) https://github.com/fezcode/atlas.burner.git
     (bin) atlas.burner
-    (category) System
+    (category) media
     (version) 0.2.0
 
   > (tool)
@@ -269,7 +269,7 @@
     (description) An interactive step-by-step archiver and extractor.
     (repo) https://github.com/fezcode/atlas.archive
     (bin) atlas.archive
-    (category) System
+    (category) system
     (version) 0.1.0
 
   > (tool)
@@ -277,7 +277,7 @@
     (description) A beautiful terminal-based subtitle searcher and downloader.
     (repo) https://github.com/fezcode/atlas.subs.git
     (bin) atlas.subs
-    (category) Media
+    (category) media
     (version) 0.1.0
 
   > (tool)
@@ -285,7 +285,7 @@
     (description) VLC Tracking application
     (repo) https://github.com/fezcode/Villain-Couch.git
     (bin) villain-couch
-    (category) Media
+    (category) media
     (version) 0.2.0
 
   > (tool)
@@ -293,7 +293,7 @@
     (description) YouTube Audio Player TUI
     (repo) https://github.com/fezcode/yap.git
     (bin) yap
-    (category) Media
+    (category) media
     (version) 0.1.1
 
   > (tool)
@@ -301,7 +301,7 @@
     (description) iPhone Ringtone and Notification Sound Manager.
     (repo) https://github.com/fezcode/atlas.tones.git
     (bin) atlas.tones
-    (category) Media
+    (category) media
     (version) 0.2.24
 
   > (tool)
@@ -309,5 +309,5 @@
     (description) Premium remote PC pilot - Control windows, mouse, and system over WiFi.
     (repo) https://github.com/fezcode/atlas.pilot
     (bin) atlas.pilot
-    (category) System
+    (category) system
     (version) 0.5.4
