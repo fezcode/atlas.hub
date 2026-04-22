@@ -159,28 +159,41 @@ func (m *Manager) Install(tool *model.Tool) error {
 	return nil
 }
 
+func (m *Manager) Delete(tool *model.Tool) error {
+	destName := tool.Bin
+	if runtime.GOOS == "windows" && !strings.HasSuffix(destName, ".exe") {
+		destName += ".exe"
+	}
+	return os.Remove(filepath.Join(m.InstallPath, destName))
+}
+
 func (m *Manager) CheckInstalledVersion(tool *model.Tool) {
 	destName := tool.Bin
 	if runtime.GOOS == "windows" && !strings.HasSuffix(destName, ".exe") {
 		destName += ".exe"
 	}
 	binPath := filepath.Join(m.InstallPath, destName)
-	
+
 	if _, err := os.Stat(binPath); err != nil {
-		return // Not installed
+		return // not installed
 	}
-	
-	// Run binary --version
+
+	// Try to read the version from the binary; fall back to the manifest version
+	// so tools that don't output a clean --version still show as installed.
 	cmd := exec.Command(binPath, "--version")
-	// Prevent blocking or TUI weirdness by capturing output strictly
 	out, err := cmd.Output()
 	if err == nil {
-		// Expected output: "atlas.xyz v0.1.0\n" or just "v0.1.0" depending on implementation
-		// My implementation: "atlas.xyz v0.1.0"
 		parts := strings.Fields(string(out))
 		if len(parts) > 0 {
 			v := parts[len(parts)-1]
 			tool.InstalledVersion = strings.TrimPrefix(v, "v")
+			return
 		}
+	}
+	// Binary exists but version unreadable — use manifest version as fallback.
+	if tool.LatestVersion != "" {
+		tool.InstalledVersion = tool.LatestVersion
+	} else {
+		tool.InstalledVersion = "?"
 	}
 }

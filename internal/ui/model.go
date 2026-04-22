@@ -36,10 +36,14 @@ type Model struct {
 
 	// Tab navigation
 	ActiveTab  int
+	TabOffset  int
 	Categories []string
 
 	// Filtered view
 	filtered []int // indices into Tools
+
+	// Deletion confirmation
+	ConfirmDelete bool
 }
 
 func NewModel(manager *install.Manager, tools []model.Tool, installPath string) Model {
@@ -71,6 +75,45 @@ func categoryRank(cat string) int {
 		}
 	}
 	return len(categoryOrder)
+}
+
+func (m *Model) ensureTabVisible() {
+	if m.Width == 0 || len(m.Categories) == 0 {
+		return
+	}
+	if m.ActiveTab < m.TabOffset {
+		m.TabOffset = m.ActiveTab
+		return
+	}
+	// Advance TabOffset until ActiveTab is within the visible window.
+	// Use approximate widths: " cat " = len(cat)+4, gap = 1, arrows = 2 each.
+	for m.TabOffset < m.ActiveTab {
+		budget := m.Width - 2
+		if m.TabOffset > 0 {
+			budget -= 2 // left arrow
+		}
+		budget -= 2 // reserve for right arrow
+		used := 0
+		visible := false
+		for i := m.TabOffset; i < len(m.Categories); i++ {
+			tw := len(m.Categories[i]) + 4
+			if i > m.TabOffset {
+				tw += 1 // gap
+			}
+			if used+tw > budget && i > m.TabOffset {
+				break
+			}
+			used += tw
+			if i == m.ActiveTab {
+				visible = true
+				break
+			}
+		}
+		if visible {
+			return
+		}
+		m.TabOffset++
+	}
 }
 
 func (m *Model) buildCategories() {
@@ -148,6 +191,31 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		}
 
 	case tea.KeyMsg:
+		if m.ConfirmDelete {
+			switch msg.String() {
+			case "y", "Y":
+				for i := range m.Tools {
+					t := &m.Tools[i]
+					if t.Selected && t.InstalledVersion != "" && !t.IsHub {
+						if m.Manager.Delete(t) == nil {
+							t.InstalledVersion = ""
+							t.Selected = false
+							t.Deleted = true
+						}
+					}
+				}
+				m.ConfirmDelete = false
+				m.rebuildFiltered()
+				m.updateViewport()
+			case "n", "N", "esc":
+				m.ConfirmDelete = false
+			case "ctrl+c":
+				m.Quitting = true
+				return m, tea.Quit
+			}
+			return m, nil
+		}
+
 		if m.SearchMode {
 			switch msg.String() {
 			case "esc":
@@ -232,14 +300,18 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			m.ActiveTab++
 			if m.ActiveTab >= len(m.Categories) {
 				m.ActiveTab = 0
+				m.TabOffset = 0
 			}
+			m.ensureTabVisible()
 			m.rebuildFiltered()
 			m.updateViewport()
 		case "shift+tab":
 			m.ActiveTab--
 			if m.ActiveTab < 0 {
 				m.ActiveTab = len(m.Categories) - 1
+				m.TabOffset = len(m.Categories) - 1
 			}
+			m.ensureTabVisible()
 			m.rebuildFiltered()
 			m.updateViewport()
 		case "/":
@@ -264,6 +336,19 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 				if !m.Tools[fi].IsHub {
 					m.Tools[fi].Selected = !allSelected
 				}
+			}
+		case "d":
+			// Only prompt if there are selected+installed non-hub tools to delete.
+			hasTarget := false
+			for i := range m.Tools {
+				t := &m.Tools[i]
+				if t.Selected && t.InstalledVersion != "" && !t.IsHub {
+					hasTarget = true
+					break
+				}
+			}
+			if hasTarget {
+				m.ConfirmDelete = true
 			}
 		case "enter":
 			if m.State == StateList {
@@ -366,27 +451,64 @@ func (m Model) View() string {
 }
 
 func (m Model) renderTabs(w int) string {
-	var tabs []string
-	for i, cat := range m.Categories {
+	arrowStyle := lipgloss.NewStyle().Foreground(midGray).Bold(true)
+	arrowLeft := arrowStyle.Render("◀")
+	arrowRight := arrowStyle.Render("▶")
+	arrowW := lipgloss.Width(arrowLeft) + 1 // +1 for space
+
+	gapStr := tabGapStyle.Render(" ")
+	gapW := lipgloss.Width(gapStr)
+
+	hasLeft := m.TabOffset > 0
+
+	// Budget: total width minus leading space, left arrow if needed, right arrow (reserved)
+	budget := w - 1
+	if hasLeft {
+		budget -= arrowW
+	}
+	budget -= arrowW // reserve for possible right arrow
+
+	var visibleTabs []string
+	used := 0
+	hasRight := false
+
+	for i := m.TabOffset; i < len(m.Categories); i++ {
+		var rendered string
 		if i == m.ActiveTab {
-			tabs = append(tabs, activeTabStyle.Render(" "+cat+" "))
+			rendered = activeTabStyle.Render(" " + m.Categories[i] + " ")
 		} else {
-			tabs = append(tabs, inactiveTabStyle.Render(" "+cat+" "))
+			rendered = inactiveTabStyle.Render(" " + m.Categories[i] + " ")
 		}
+		tw := lipgloss.Width(rendered)
+		if i > m.TabOffset {
+			tw += gapW
+		}
+		if used+tw > budget {
+			hasRight = true
+			break
+		}
+		visibleTabs = append(visibleTabs, rendered)
+		used += tw
 	}
 
-	row := strings.Join(tabs, tabGapStyle.Render(" "))
+	row := ""
+	if hasLeft {
+		row += arrowLeft + " "
+	}
+	row += strings.Join(visibleTabs, gapStr)
+	if hasRight {
+		row += " " + arrowRight
+	}
 
-	// If search is active, show it on the right
+	// Search display on the right
+	var search string
 	if m.SearchMode {
-		search := searchStyle.Render("/") + searchInputStyle.Render(m.SearchQuery) + searchStyle.Render("_")
-		gap := w - lipgloss.Width(row) - lipgloss.Width(search) - 2
-		if gap > 0 {
-			row = row + strings.Repeat(" ", gap) + search
-		}
+		search = searchStyle.Render("/") + searchInputStyle.Render(m.SearchQuery) + searchStyle.Render("_")
 	} else if m.SearchQuery != "" {
-		search := searchStyle.Render("filter: ") + searchInputStyle.Render(m.SearchQuery)
-		gap := w - lipgloss.Width(row) - lipgloss.Width(search) - 2
+		search = searchStyle.Render("filter: ") + searchInputStyle.Render(m.SearchQuery)
+	}
+	if search != "" {
+		gap := w - 1 - lipgloss.Width(row) - lipgloss.Width(search)
 		if gap > 0 {
 			row = row + strings.Repeat(" ", gap) + search
 		}
@@ -447,9 +569,13 @@ func (m Model) renderList(lines []string, w int) {
 			cursor = cursorStyle.Render("› ")
 		}
 
-		check := checkboxStyle.Render("○")
-		if tool.Selected {
+		var check string
+		if tool.IsHub {
+			check = hubStyle.Render("⊘") // locked — cannot be deleted
+		} else if tool.Selected {
 			check = checkedStyle.Render("●")
+		} else {
+			check = checkboxStyle.Render("○")
 		}
 
 		// Col 2: name (fixed width)
@@ -531,22 +657,40 @@ func (m Model) renderList(lines []string, w int) {
 	}
 	lines[sepLine] = separatorStyle.Render(strings.Repeat("─", sepW2))
 
-	// Line H-2: Status bar
-	sel, total := m.selectedCount()
+	// Line H-2: Status bar (or confirmation prompt)
 	statusLine := m.Height - 2
 
-	left := fmt.Sprintf(" %d/%d selected", sel, total)
+	if m.ConfirmDelete {
+		// Count how many tools will be deleted
+		count := 0
+		for i := range m.Tools {
+			t := &m.Tools[i]
+			if t.Selected && t.InstalledVersion != "" && !t.IsHub {
+				count++
+			}
+		}
+		prompt := fmt.Sprintf(" Delete %d tool(s)? ", count)
+		confirm := confirmYesStyle.Render(" y ") + confirmStyle.Render("yes") +
+			confirmStyle.Render("  /  ") +
+			confirmNoStyle.Render(" n ") + confirmStyle.Render("no")
+		gap := w - lipgloss.Width(prompt) - lipgloss.Width(confirm)
+		if gap < 0 {
+			gap = 0
+		}
+		lines[statusLine] = confirmBarStyle.Width(w).Render(prompt + strings.Repeat(" ", gap) + confirm)
+	} else {
+		sel, total := m.selectedCount()
+		left := fmt.Sprintf(" %d/%d selected", sel, total)
 
-	// Pagination info
-	page, totalPages := m.pageInfo()
-	right := fmt.Sprintf(" %d of %d   page %d/%d ", m.Cursor+1, len(m.filtered), page, totalPages)
+		page, totalPages := m.pageInfo()
+		right := fmt.Sprintf(" %d of %d   page %d/%d ", m.Cursor+1, len(m.filtered), page, totalPages)
 
-	gap := w - lipgloss.Width(left) - lipgloss.Width(right)
-	if gap < 0 {
-		gap = 0
+		gap := w - lipgloss.Width(left) - lipgloss.Width(right)
+		if gap < 0 {
+			gap = 0
+		}
+		lines[statusLine] = statusBarStyle.Width(w).Render(left + strings.Repeat(" ", gap) + right)
 	}
-	barContent := left + strings.Repeat(" ", gap) + right
-	lines[statusLine] = statusBarStyle.Width(w).Render(barContent)
 
 	// Line H-1: Help
 	helpLine := m.Height - 1
@@ -556,6 +700,7 @@ func (m Model) renderList(lines []string, w int) {
 		helpKeyStyle.Render("a") + helpStyle.Render(" all  ") +
 		helpKeyStyle.Render("tab") + helpStyle.Render(" category  ") +
 		helpKeyStyle.Render("/") + helpStyle.Render(" search  ") +
+		helpKeyStyle.Render("d") + helpStyle.Render(" delete  ") +
 		helpKeyStyle.Render("enter") + helpStyle.Render(" install  ") +
 		helpKeyStyle.Render("q") + helpStyle.Render(" quit")
 }

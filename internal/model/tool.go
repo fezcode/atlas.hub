@@ -14,4 +14,5 @@ type Tool struct {
 	Selected         bool   `piml:"-"`
 	Status           string `piml:"-"` // "pending", "installing", "done", "error"
 	Error            error  `piml:"-"`
+	Deleted          bool   `piml:"-"`
 }

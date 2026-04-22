@@ -64,6 +64,9 @@ var (
 	checkedStyle = lipgloss.NewStyle().
 			Foreground(mint)
 
+	hubStyle = lipgloss.NewStyle().
+			Foreground(rose)
+
 	installedBadge = lipgloss.NewStyle().
 			Foreground(mint)
 
@@ -82,6 +85,26 @@ var (
 	statusBarStyle = lipgloss.NewStyle().
 			Foreground(lipgloss.Color("#AAAAAA")).
 			Background(darkBg)
+
+	// Confirmation bar
+	confirmBarStyle = lipgloss.NewStyle().
+			Foreground(white).
+			Background(lipgloss.Color("#7C3AED"))
+
+	confirmStyle = lipgloss.NewStyle().
+			Foreground(lipgloss.Color("#DDD6FE"))
+
+	confirmYesStyle = lipgloss.NewStyle().
+			Foreground(white).
+			Background(rose).
+			Bold(true).
+			Padding(0, 1)
+
+	confirmNoStyle = lipgloss.NewStyle().
+			Foreground(white).
+			Background(dimGray).
+			Bold(true).
+			Padding(0, 1)
 
 	// Search
 	searchStyle = lipgloss.NewStyle().
