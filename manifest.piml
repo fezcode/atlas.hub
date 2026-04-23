@@ -310,7 +310,7 @@
     (repo) https://github.com/fezcode/atlas.pilot
     (bin) atlas.pilot
     (category) system
-    (version) 0.7.82
+    (version) 0.7.83
 
   > (tool)
     (name) atlas.quote
