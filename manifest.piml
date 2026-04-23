@@ -278,7 +278,7 @@
     (repo) https://github.com/fezcode/atlas.subs.git
     (bin) atlas.subs
     (category) media
-    (version) 0.2.2
+    (version) 0.3.0
 
   > (tool)
     (name) villain-couch
