@@ -6,7 +6,7 @@
     (bin) atlas.hub
     (category) dev
     (is_hub) true
-    (version) 0.4.24
+    (version) 0.5.0
 
   > (tool)
     (name) atlas.radio
@@ -190,7 +190,7 @@
     (repo) https://github.com/fezcode/atlas.ed
     (bin) atlas.ed
     (category) dev
-    (version) 0.4.1
+    (version) 0.4.2
 
   > (tool)
     (name) atlas.color
@@ -310,7 +310,7 @@
     (repo) https://github.com/fezcode/atlas.pilot
     (bin) atlas.pilot
     (category) system
-    (version) 0.5.4
+    (version) 0.7.82
 
   > (tool)
     (name) atlas.quote
