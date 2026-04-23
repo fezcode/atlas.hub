@@ -319,3 +319,11 @@
     (bin) atlas.quote
     (category) media
     (version) 0.1.0
+
+  > (tool)
+    (name) atlas.llm
+    (description) Local AI chat with project context tooling. Interactive TUI with slash commands, plus one-shot --summarize, --grep, and --dump modes.
+    (repo) https://github.com/fezcode/atlas.llm
+    (bin) atlas.llm
+    (category) AI
+    (version) 0.3.0
