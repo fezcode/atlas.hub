@@ -182,7 +182,7 @@
     (repo) https://github.com/fezcode/atlas.cat
     (bin) atlas.cat
     (category) dev
-    (version) 0.3.5
+    (version) 0.4.0
 
   > (tool)
     (name) atlas.ed
@@ -326,4 +326,12 @@
     (repo) https://github.com/fezcode/atlas.llm
     (bin) atlas.llm
     (category) AI
-    (version) 0.9.0
+    (version) 0.11.0
+
+  > (tool)
+    (name) atlas.tail
+    (description) A beautiful, high-performance terminal log follower (tail -f with syntax highlighting).
+    (repo) https://github.com/fezcode/atlas.tail
+    (bin) atlas.tail
+    (category) dev
+    (version) 0.1.0
