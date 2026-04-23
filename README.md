@@ -82,6 +82,42 @@ The Atlas ecosystem lives entirely in your home directory:
 
 ---
 
+## 🧭 CLI Reference
+
+```text
+atlas.hub                    Start the installer TUI
+atlas.hub -v, --version      Show version
+atlas.hub -h, --help         Show help
+atlas.hub --clear-go-cache   Clear the Go build/module/test/fuzz caches and exit
+```
+
+### When to use `--clear-go-cache`
+Use when a tool fails to build with a confusing or stale-looking error (e.g. *"binary with suffix -windows-amd64.exe not found in build dir"*, unexplained compile errors after a Go toolchain upgrade, or phantom dependency issues). It runs:
+
+```bash
+go clean -cache -testcache -modcache -fuzzcache
+```
+
+---
+
+## 🧾 Troubleshooting & Install Logs
+
+When an install fails, atlas.hub now surfaces:
+- The exact **stage** that failed (`clone` / `tidy` / `build` / `install`).
+- The **command** that was executed, its **exit code**, and the **full stdout/stderr**.
+- A **suggested remedy** (e.g. install a C compiler, clear Go cache, check network).
+- A **path to a full log file** you can inspect.
+
+Logs are written per-install to:
+
+```text
+~/.atlas/hub-data/logs/<tool>-<YYYYMMDD-HHMMSS>.log
+```
+
+If the TUI truncates a long error, open the log file for the complete transcript.
+
+---
+
 ## 🛠️ Included Tools
 
 The Atlas Hub currently manages the following tools:

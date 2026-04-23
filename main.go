@@ -4,6 +4,7 @@ import (
     "embed"
     "fmt"
     "os"
+    "os/exec"
     "path/filepath"
 
     "atlas.hub/internal/install"
@@ -27,15 +28,23 @@ func main() {
     if len(os.Args) > 1 && (os.Args[1] == "-h" || os.Args[1] == "--help" || os.Args[1] == "help") {
         fmt.Println("Atlas Hub - The centralized installer and manager for the Atlas Suite.")
         fmt.Println("\nUsage:")
-        fmt.Println("  atlas.hub        Start the installer TUI")
-        fmt.Println("  atlas.hub -v     Show version")
-        fmt.Println("  atlas.hub -h     Show this help")
+        fmt.Println("  atlas.hub                    Start the installer TUI")
+        fmt.Println("  atlas.hub -v, --version      Show version")
+        fmt.Println("  atlas.hub -h, --help         Show this help")
+        fmt.Println("  atlas.hub --clear-go-cache   Clear the Go build/module/test/fuzz caches and exit")
         fmt.Println("\nControls (TUI):")
         fmt.Println("  j/k, Up/Down     Navigate the list")
         fmt.Println("  Space            Toggle tool selection")
         fmt.Println("  h                Toggle application descriptions")
         fmt.Println("  Enter            Start installation of selected tools")
         fmt.Println("  q, Ctrl+C        Quit")
+        return
+    }
+    if len(os.Args) > 1 && os.Args[1] == "--clear-go-cache" {
+        if err := clearGoCache(); err != nil {
+            fmt.Fprintf(os.Stderr, "Failed to clear Go cache: %v\n", err)
+            os.Exit(1)
+        }
         return
     }
 
@@ -96,6 +105,18 @@ func main() {
         fmt.Fprintf(os.Stderr, "Error running program: %v\n", err)
         os.Exit(1)
     }
+}
+
+func clearGoCache() error {
+    fmt.Println("🧹  Clearing Go caches (build, test, module, fuzz)...")
+    cmd := exec.Command("go", "clean", "-cache", "-testcache", "-modcache", "-fuzzcache")
+    cmd.Stdout = os.Stdout
+    cmd.Stderr = os.Stderr
+    if err := cmd.Run(); err != nil {
+        return fmt.Errorf("`go clean` failed (is `go` in PATH?): %w", err)
+    }
+    fmt.Println("✅  Go caches cleared.")
+    return nil
 }
 
 func syncManifest(hubDataDir string) (string, error) {
