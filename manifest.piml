@@ -54,7 +54,7 @@
     (repo) https://github.com/fezcode/atlas.stats
     (bin) atlas.stats
     (category) system
-    (version) 0.1.2
+    (version) 0.2.5
 
   > (tool)
     (name) atlas.websearch
