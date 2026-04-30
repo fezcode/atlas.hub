@@ -214,7 +214,7 @@
     (repo) https://github.com/fezcode/atlas.sql
     (bin) atlas.sql
     (category) data
-    (version) 0.2.0
+    (version) 0.3.0
 
   > (tool)
     (name) atlas.sand
@@ -326,7 +326,7 @@
     (repo) https://github.com/fezcode/atlas.llm
     (bin) atlas.llm
     (category) AI
-    (version) 0.13.0
+    (version) 0.17.0
 
   > (tool)
     (name) atlas.tail
