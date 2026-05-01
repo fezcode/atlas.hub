@@ -335,3 +335,11 @@
     (bin) atlas.tail
     (category) dev
     (version) 0.4.0
+
+  > (tool)
+    (name) atlas.doomwalker
+    (description) A lightning-fast disk space analyzer with a luxury terminal treemap.
+    (repo) https://github.com/fezcode/atlas.doomwalker.git
+    (bin) atlas.doomwalker
+    (category) System
+    (version) 0.1.0
