@@ -290,7 +290,7 @@
 
   > (tool)
     (name) atlas.yap
-    (description) YouTube Audio Player TUI with search
+    (description) YouTube Audio Player TUI with search (Windows only)
     (repo) https://github.com/fezcode/yap.git
     (bin) atlas.yap
     (category) media
