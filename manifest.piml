@@ -294,7 +294,7 @@
     (repo) https://github.com/fezcode/yap.git
     (bin) atlas.yap
     (category) media
-    (version) 0.2.1
+    (version) 0.3.0
 
   > (tool)
     (name) atlas.tones
