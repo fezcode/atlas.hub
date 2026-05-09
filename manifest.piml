@@ -289,12 +289,12 @@
     (version) 0.2.0
 
   > (tool)
-    (name) yap
-    (description) YouTube Audio Player TUI
+    (name) atlas.yap
+    (description) YouTube Audio Player TUI with search
     (repo) https://github.com/fezcode/yap.git
-    (bin) yap
+    (bin) atlas.yap
     (category) media
-    (version) 0.1.1
+    (version) 0.2.0
 
   > (tool)
     (name) atlas.tones
