@@ -343,3 +343,11 @@
     (bin) atlas.doomwalker
     (category) System
     (version) 0.3.0
+
+  > (tool)
+    (name) atlas.dict
+    (description) Fast, offline terminal dictionary with delicate design.
+    (repo) https://github.com/fezcode/atlas.dict.git
+    (bin) atlas.dict
+    (category) Productivity
+    (version) 0.2.0
