@@ -6,7 +6,7 @@
     (bin) atlas.hub
     (category) dev
     (is_hub) true
-    (version) 0.5.1
+    (version) 0.5.2
 
   > (tool)
     (name) atlas.radio
@@ -326,7 +326,7 @@
     (repo) https://github.com/fezcode/atlas.llm
     (bin) atlas.llm
     (category) AI
-    (version) 0.20.0
+    (version) 0.21.0
 
   > (tool)
     (name) atlas.tail
