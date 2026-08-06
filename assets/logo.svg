@@ -1,0 +1,139 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512" role="img" aria-label="atlas.hub logo: Atlas holding a golden globe overhead">
+  <defs>
+    <linearGradient id="gold" gradientUnits="userSpaceOnUse" x1="256" y1="70" x2="256" y2="330">
+      <stop offset="0" stop-color="#f6d47c"/>
+      <stop offset="0.55" stop-color="#e0b23f"/>
+      <stop offset="1" stop-color="#b9861a"/>
+    </linearGradient>
+    <linearGradient id="goldBody" gradientUnits="userSpaceOnUse" x1="256" y1="320" x2="256" y2="500">
+      <stop offset="0" stop-color="#eec163"/>
+      <stop offset="1" stop-color="#9c7212"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="0.5" cy="0.45" r="0.6">
+      <stop offset="0" stop-color="#f0c75e" stop-opacity="0.28"/>
+      <stop offset="0.7" stop-color="#f0c75e" stop-opacity="0.07"/>
+      <stop offset="1" stop-color="#f0c75e" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="sphereSolid" cx="0.35" cy="0.28" r="1">
+      <stop offset="0" stop-color="#fbe6a4"/>
+      <stop offset="0.35" stop-color="#ecc35c"/>
+      <stop offset="0.7" stop-color="#cf9a26"/>
+      <stop offset="1" stop-color="#8a5f10"/>
+    </radialGradient>
+    <radialGradient id="rimShade" cx="0.38" cy="0.32" r="0.85">
+      <stop offset="0.72" stop-color="#241905" stop-opacity="0"/>
+      <stop offset="1" stop-color="#241905" stop-opacity="0.62"/>
+    </radialGradient>
+    <radialGradient id="specular" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0" stop-color="#fff6dc" stop-opacity="0.4"/>
+      <stop offset="1" stop-color="#fff6dc" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="fadeG" gradientUnits="userSpaceOnUse" x1="0" y1="446" x2="0" y2="504">
+      <stop offset="0" stop-color="#fff"/>
+      <stop offset="1" stop-color="#000"/>
+    </linearGradient>
+    <mask id="fadeBust">
+      <rect x="0" y="0" width="512" height="512" fill="url(#fadeG)"/>
+    </mask>
+    <clipPath id="globeClip">
+      <circle cx="256" cy="198" r="118"/>
+    </clipPath>
+
+    <!-- left arm: wrist > forearm > elbow > bicep > deltoid, mirrored for the right -->
+    <g id="armL">
+      <path fill="url(#goldBody)" d="M 180 288
+        C 176 310 176 335 172 352
+        C 178 380 196 398 212 410
+        L 214 424
+        C 202 430 188 432 176 428
+        C 158 420 150 402 154 386
+        C 150 372 146 362 146 354
+        C 146 330 150 305 156 282
+        C 160 276 168 274 174 278
+        C 178 280 181 284 180 288 Z"/>
+      <path fill="none" stroke="#6f4c0d" stroke-opacity="0.5" stroke-width="3" stroke-linecap="round"
+        d="M 160 350 C 164 364 170 372 178 378 M 158 390 C 168 396 182 400 194 406"/>
+    </g>
+    <!-- gripping hand, mirrored for the right -->
+    <g id="handL">
+      <rect x="153" y="271" width="34" height="19" rx="9" fill="url(#goldBody)" transform="rotate(-48 170 280)"/>
+      <circle cx="170" cy="282" r="13" fill="url(#goldBody)"/>
+      <ellipse cx="182" cy="266" rx="6" ry="11" fill="url(#goldBody)" transform="rotate(38 182 266)"/>
+    </g>
+  </defs>
+
+  <!-- onyx background -->
+  <rect x="0" y="0" width="512" height="512" rx="64" fill="#16130e"/>
+  <rect x="6" y="6" width="500" height="500" rx="58" fill="none" stroke="#2c2516" stroke-width="2"/>
+
+  <g transform="translate(256 280) scale(0.95) translate(-256 -280)">
+    <!-- ambient glow -->
+    <circle cx="256" cy="205" r="195" fill="url(#glow)"/>
+
+    <!-- ================= ATLAS BUST (fades out below the chest) ================= -->
+    <g mask="url(#fadeBust)">
+      <use href="#armL"/>
+      <use href="#armL" transform="translate(512 0) scale(-1 1)"/>
+      <!-- traps and shoulder yoke, wide enough to swallow the deltoids -->
+      <path fill="url(#goldBody)" d="M 166 420 C 186 394 212 382 240 378 L 272 378 C 300 382 326 394 346 420 L 322 432 L 190 432 Z"/>
+      <!-- neck -->
+      <path fill="url(#goldBody)" d="M 244 364 C 244 376 242 384 236 392 L 276 392 C 270 384 268 376 268 364 Z"/>
+      <!-- chest -->
+      <path fill="url(#goldBody)" d="M 188 420 C 194 452 220 472 256 474 C 292 472 318 452 324 420 C 300 406 278 400 256 400 C 234 400 212 406 188 420 Z"/>
+      <!-- head -->
+      <ellipse cx="256" cy="348" rx="21" ry="26" fill="url(#goldBody)"/>
+      <!-- anatomy detail lines -->
+      <g fill="none" stroke="#6f4c0d" stroke-opacity="0.45" stroke-width="3" stroke-linecap="round">
+        <path d="M 245 373 C 251 378 261 378 267 373"/>
+        <path d="M 232 396 C 242 400 250 400 254 398"/>
+        <path d="M 280 396 C 270 400 262 400 258 398"/>
+        <path d="M 256 406 L 256 456"/>
+        <path d="M 214 448 C 228 458 244 460 252 456"/>
+        <path d="M 298 448 C 284 458 268 460 260 456"/>
+      </g>
+    </g>
+
+    <!-- ================= GLOBE (solid gold, engraved) ================= -->
+    <g>
+      <circle cx="256" cy="198" r="118" fill="url(#sphereSolid)"/>
+      <!-- embossed continents -->
+      <g clip-path="url(#globeClip)" fill="#f6dc8b" fill-opacity="0.6" stroke="#6b4a0c" stroke-opacity="0.5" stroke-width="1.5">
+        <path d="M 165 132 C 178 118 205 110 226 118 C 238 124 236 136 228 142 C 220 148 214 158 208 170 C 204 180 198 186 192 180 C 188 174 184 166 178 162 C 168 156 158 146 165 132 Z"/>
+        <path d="M 210 196 C 220 188 234 190 240 200 C 246 212 244 230 238 248 C 234 262 228 272 222 268 C 216 262 212 244 208 228 C 205 214 203 203 210 196 Z"/>
+        <path d="M 286 138 C 296 128 312 126 322 134 C 328 140 324 148 314 152 C 304 156 294 156 288 150 C 283 145 282 142 286 138 Z"/>
+        <path d="M 284 168 C 296 160 314 162 324 172 C 332 182 330 196 324 208 C 318 222 310 238 302 244 C 294 248 288 238 286 224 C 284 210 278 196 276 184 C 275 175 277 172 284 168 Z"/>
+        <path d="M 330 130 C 344 128 356 140 360 156 C 362 168 356 176 348 170 C 340 164 334 152 330 144 Z"/>
+        <path d="M 322 258 C 330 252 342 254 346 262 C 348 268 342 274 332 274 C 324 274 318 266 322 258 Z"/>
+        <ellipse cx="238" cy="100" rx="12" ry="8" transform="rotate(-20 238 100)"/>
+      </g>
+      <!-- engraved meridians: pole-to-pole front arcs -->
+      <g fill="none" stroke="#6b4a0c" stroke-opacity="0.55" stroke-width="2.2" stroke-linecap="round">
+        <line x1="256" y1="86" x2="256" y2="310" stroke-width="2.5"/>
+        <path d="M 256 86 A 30 112 0 0 0 256 310"/>
+        <path d="M 256 86 A 30 112 0 0 1 256 310"/>
+        <path d="M 256 86 A 68 112 0 0 0 256 310"/>
+        <path d="M 256 86 A 68 112 0 0 1 256 310"/>
+        <path d="M 256 86 A 100 112 0 0 0 256 310"/>
+        <path d="M 256 86 A 100 112 0 0 1 256 310"/>
+      </g>
+      <!-- engraved parallels: front arcs -->
+      <g fill="none" stroke="#6b4a0c" stroke-opacity="0.55" stroke-width="2.2" stroke-linecap="round">
+        <path d="M 138 198 A 118 24 0 0 0 374 198" stroke-width="3.5"/>
+        <path d="M 145 158 A 111 22 0 0 0 367 158"/>
+        <path d="M 145 238 A 111 22 0 0 0 367 238"/>
+        <path d="M 168 120 A 88 18 0 0 0 344 120"/>
+        <path d="M 168 276 A 88 18 0 0 0 344 276"/>
+        <path d="M 198 95 A 58 12 0 0 0 314 95"/>
+        <path d="M 198 301 A 58 12 0 0 0 314 301"/>
+      </g>
+      <!-- shading and highlight -->
+      <circle cx="256" cy="198" r="118" fill="url(#rimShade)"/>
+      <ellipse cx="212" cy="130" rx="36" ry="20" fill="url(#specular)" transform="rotate(-28 212 130)"/>
+      <circle cx="256" cy="198" r="118" fill="none" stroke="url(#gold)" stroke-width="7"/>
+    </g>
+
+    <!-- hands gripping the globe, in front of it -->
+    <use href="#handL"/>
+    <use href="#handL" transform="translate(512 0) scale(-1 1)"/>
+  </g>
+</svg>

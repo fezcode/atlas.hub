@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="./assets/logo.svg" alt="atlas.hub logo — a golden globe held aloft by Atlas" width="220"/>
+</p>
+
 # atlas.hub 🛰️
 
 ![Banner Image](./banner-image.png)
