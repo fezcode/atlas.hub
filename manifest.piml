@@ -322,11 +322,11 @@
 
   > (tool)
     (name) atlas.llm
-    (description) Local AI chat with project context tooling. Interactive TUI with slash commands, plus one-shot --summarize, --grep, and --dump modes.
+    (description) Local AI chat with GPU offload, agentic tools, and MCP servers. Serves a model over the LAN for other machines; also one-shot --summarize, --grep, and --dump.
     (repo) https://github.com/fezcode/atlas.llm
     (bin) atlas.llm
     (category) AI
-    (version) 0.32.0
+    (version) 0.32.1
 
   > (tool)
     (name) atlas.tail
