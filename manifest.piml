@@ -326,7 +326,7 @@
     (repo) https://github.com/fezcode/atlas.llm
     (bin) atlas.llm
     (category) AI
-    (version) 0.41.1
+    (version) 0.41.2
 
   > (tool)
     (name) atlas.tail
