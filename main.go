@@ -6,6 +6,7 @@ import (
     "os"
     "os/exec"
     "path/filepath"
+    "sync"
 
     "atlas.hub/internal/install"
     "atlas.hub/internal/model"
@@ -94,10 +95,16 @@ func main() {
     }
     defer manager.Cleanup()
 
-    // Check installed versions
+    // Check installed versions in parallel (each check spawns a subprocess)
+    var wg sync.WaitGroup
     for i := range tools {
-        manager.CheckInstalledVersion(&tools[i])
+        wg.Add(1)
+        go func(t *model.Tool) {
+            defer wg.Done()
+            manager.CheckInstalledVersion(t)
+        }(&tools[i])
     }
+    wg.Wait()
 
     // 5. Start TUI
     p := tea.NewProgram(ui.NewModel(manager, tools, installPath), tea.WithAltScreen())
