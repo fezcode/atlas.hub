@@ -6,7 +6,7 @@
     (bin) atlas.hub
     (category) dev
     (is_hub) true
-    (version) 0.5.4
+    (version) 0.5.5
 
   > (tool)
     (name) atlas.radio
@@ -14,7 +14,7 @@
     (repo) https://github.com/fezcode/atlas.radio
     (bin) atlas.radio
     (category) network
-    (version) 0.3.1
+    (version) 0.3.2
 
   > (tool)
     (name) atlas.grave
@@ -22,7 +22,7 @@
     (repo) https://github.com/fezcode/atlas.grave
     (bin) atlas.grave
     (category) system
-    (version) 0.1.4
+    (version) 0.1.5
 
   > (tool)
     (name) atlas.facade
@@ -30,7 +30,7 @@
     (repo) https://github.com/fezcode/atlas.facade
     (bin) atlas.facade
     (category) network
-    (version) 0.1.2
+    (version) 0.1.3
 
   > (tool)
     (name) atlas.screensaver
@@ -38,7 +38,7 @@
     (repo) https://github.com/fezcode/atlas.screensaver
     (bin) atlas.screensaver
     (category) system
-    (version) 0.3.1
+    (version) 0.3.2
 
   > (tool)
     (name) atlas.todo
@@ -46,7 +46,7 @@
     (repo) https://github.com/fezcode/atlas.todo
     (bin) atlas.todo
     (category) productivity
-    (version) 0.5.1
+    (version) 0.5.2
 
   > (tool)
     (name) atlas.stats
@@ -54,7 +54,7 @@
     (repo) https://github.com/fezcode/atlas.stats
     (bin) atlas.stats
     (category) system
-    (version) 0.2.5
+    (version) 0.2.6
 
   > (tool)
     (name) atlas.websearch
@@ -62,7 +62,7 @@
     (repo) https://github.com/fezcode/atlas.websearch
     (bin) atlas.websearch
     (category) network
-    (version) 0.2.0
+    (version) 0.2.1
 
   > (tool)
     (name) atlas.compass
@@ -70,7 +70,7 @@
     (repo) https://github.com/fezcode/atlas.compass
     (bin) atlas.compass
     (category) security
-    (version) 0.1.1
+    (version) 0.1.2
 
   > (tool)
     (name) atlas.clock
@@ -78,7 +78,7 @@
     (repo) https://github.com/fezcode/atlas.clock
     (bin) atlas.clock
     (category) productivity
-    (version) 0.2.0
+    (version) 0.2.1
 
   > (tool)
     (name) atlas.cam
@@ -86,7 +86,7 @@
     (repo) https://github.com/fezcode/atlas.cam
     (bin) atlas.cam
     (category) media
-    (version) 0.1.3
+    (version) 0.1.4
 
   > (tool)
     (name) atlas.games
@@ -94,7 +94,7 @@
     (repo) https://github.com/fezcode/atlas.games
     (bin) atlas.games
     (category) games
-    (version) 0.6.0
+    (version) 0.6.1
 
   > (tool)
     (name) atlas.bench
@@ -102,7 +102,7 @@
     (repo) https://github.com/fezcode/atlas.bench
     (bin) atlas.bench
     (category) dev
-    (version) 0.2.0
+    (version) 0.2.1
 
   > (tool)
     (name) atlas.pq
@@ -110,7 +110,7 @@
     (repo) https://github.com/fezcode/atlas.pq
     (bin) atlas.pq
     (category) data
-    (version) 0.1.1
+    (version) 0.1.2
 
   > (tool)
     (name) atlas.radar
@@ -118,7 +118,7 @@
     (repo) https://github.com/fezcode/atlas.radar
     (bin) atlas.radar
     (category) dev
-    (version) 0.1.8
+    (version) 0.1.9
 
   > (tool)
     (name) atlas.otp
@@ -126,7 +126,7 @@
     (repo) https://github.com/fezcode/atlas.otp
     (bin) atlas.otp
     (category) security
-    (version) 0.1.2
+    (version) 0.1.3
 
   > (tool)
     (name) atlas.diff
@@ -134,7 +134,7 @@
     (repo) https://github.com/fezcode/atlas.diff
     (bin) atlas.diff
     (category) dev
-    (version) 0.1.3
+    (version) 0.1.4
 
   > (tool)
     (name) atlas.deck
@@ -142,7 +142,7 @@
     (repo) https://github.com/fezcode/atlas.deck
     (bin) atlas.deck
     (category) productivity
-    (version) 0.1.4
+    (version) 0.1.5
 
   > (tool)
     (name) atlas.hash
@@ -150,7 +150,7 @@
     (repo) https://github.com/fezcode/atlas.hash
     (bin) atlas.hash
     (category) data
-    (version) 0.1.0
+    (version) 0.1.1
 
   > (tool)
     (name) atlas.convert
@@ -158,7 +158,7 @@
     (repo) https://github.com/fezcode/atlas.convert
     (bin) atlas.convert
     (category) media
-    (version) 0.3.1
+    (version) 0.3.2
 
   > (tool)
     (name) atlas.conquistador
@@ -166,7 +166,7 @@
     (repo) https://github.com/fezcode/atlas.conquistador
     (bin) atlas.conquistador
     (category) data
-    (version) 0.4.0
+    (version) 0.4.1
 
   > (tool)
     (name) atlas.horizon
@@ -174,7 +174,7 @@
     (repo) https://github.com/fezcode/atlas.horizon
     (bin) atlas.horizon
     (category) system
-    (version) 0.1.0
+    (version) 0.1.1
 
   > (tool)
     (name) atlas.cat
@@ -182,7 +182,7 @@
     (repo) https://github.com/fezcode/atlas.cat
     (bin) atlas.cat
     (category) dev
-    (version) 0.4.0
+    (version) 0.4.1
 
   > (tool)
     (name) atlas.ed
@@ -190,7 +190,7 @@
     (repo) https://github.com/fezcode/atlas.ed
     (bin) atlas.ed
     (category) dev
-    (version) 0.4.4
+    (version) 0.4.5
 
   > (tool)
     (name) atlas.color
@@ -198,7 +198,7 @@
     (repo) https://github.com/fezcode/atlas.color.git
     (bin) atlas.color
     (category) dev
-    (version) 0.1.0
+    (version) 0.1.1
 
   > (tool)
     (name) atlas.ip
@@ -206,7 +206,7 @@
     (repo) https://github.com/fezcode/atlas.ip.git
     (bin) atlas.ip
     (category) system
-    (version) 0.1.0
+    (version) 0.1.1
 
   > (tool)
     (name) atlas.sql
@@ -214,7 +214,7 @@
     (repo) https://github.com/fezcode/atlas.sql
     (bin) atlas.sql
     (category) data
-    (version) 0.3.0
+    (version) 0.3.1
 
   > (tool)
     (name) atlas.sand
@@ -222,7 +222,7 @@
     (repo) https://github.com/fezcode/atlas.sand
     (bin) atlas.sand
     (category) games
-    (version) 0.1.0
+    (version) 0.1.1
 
   > (tool)
     (name) atlas.gitty
@@ -230,7 +230,7 @@
     (repo) https://github.com/fezcode/atlas.gitty
     (bin) atlas.gitty
     (category) dev
-    (version) 0.4.3
+    (version) 0.4.4
 
   > (tool)
     (name) atlas.guide
@@ -238,7 +238,7 @@
     (repo) https://github.com/fezcode/atlas.guide.git
     (bin) atlas.guide
     (category) productivity
-    (version) 0.3.0
+    (version) 0.3.1
 
   > (tool)
     (name) atlas.notes
@@ -246,7 +246,7 @@
     (repo) https://github.com/fezcode/atlas.notes
     (bin) atlas.notes
     (category) productivity
-    (version) 0.1.0
+    (version) 0.1.1
 
   > (tool)
     (name) atlas.batchdown
@@ -254,7 +254,7 @@
     (repo) https://github.com/fezcode/atlas.batchdown
     (bin) atlas.batchdown
     (category) media
-    (version) 0.1.0
+    (version) 0.1.1
 
   > (tool)
     (name) atlas.burner
@@ -262,7 +262,7 @@
     (repo) https://github.com/fezcode/atlas.burner.git
     (bin) atlas.burner
     (category) media
-    (version) 0.2.0
+    (version) 0.2.1
 
   > (tool)
     (name) atlas.archive
@@ -270,7 +270,7 @@
     (repo) https://github.com/fezcode/atlas.archive
     (bin) atlas.archive
     (category) system
-    (version) 0.1.0
+    (version) 0.1.1
 
   > (tool)
     (name) atlas.subs
@@ -278,7 +278,7 @@
     (repo) https://github.com/fezcode/atlas.subs.git
     (bin) atlas.subs
     (category) media
-    (version) 0.3.0
+    (version) 0.3.1
 
   > (tool)
     (name) villain-couch
@@ -294,7 +294,7 @@
     (repo) https://github.com/fezcode/yap.git
     (bin) atlas.yap
     (category) media
-    (version) 0.3.1
+    (version) 0.3.2
 
   > (tool)
     (name) atlas.tones
@@ -302,7 +302,7 @@
     (repo) https://github.com/fezcode/atlas.tones.git
     (bin) atlas.tones
     (category) media
-    (version) 0.2.24
+    (version) 0.2.25
 
   > (tool)
     (name) atlas.pilot
@@ -310,7 +310,7 @@
     (repo) https://github.com/fezcode/atlas.pilot
     (bin) atlas.pilot
     (category) system
-    (version) 0.7.83
+    (version) 0.7.84
 
   > (tool)
     (name) atlas.quote
@@ -318,7 +318,7 @@
     (repo) https://github.com/fezcode/atlas.quote.git
     (bin) atlas.quote
     (category) media
-    (version) 0.1.0
+    (version) 0.1.1
 
   > (tool)
     (name) atlas.llm
@@ -326,7 +326,7 @@
     (repo) https://github.com/fezcode/atlas.llm
     (bin) atlas.llm
     (category) AI
-    (version) 0.43.1
+    (version) 0.43.2
 
   > (tool)
     (name) atlas.tail
@@ -334,7 +334,7 @@
     (repo) https://github.com/fezcode/atlas.tail
     (bin) atlas.tail
     (category) dev
-    (version) 0.4.0
+    (version) 0.4.1
 
   > (tool)
     (name) atlas.doomwalker
@@ -342,7 +342,7 @@
     (repo) https://github.com/fezcode/atlas.doomwalker.git
     (bin) atlas.doomwalker
     (category) System
-    (version) 0.3.0
+    (version) 0.3.1
 
   > (tool)
     (name) atlas.dict
@@ -350,4 +350,4 @@
     (repo) https://github.com/fezcode/atlas.dict.git
     (bin) atlas.dict
     (category) Productivity
-    (version) 0.2.0
+    (version) 0.2.1
