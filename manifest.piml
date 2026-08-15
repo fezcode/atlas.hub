@@ -351,3 +351,11 @@
     (bin) atlas.dict
     (category) Productivity
     (version) 0.2.1
+
+  > (tool)
+    (name) atlas.pulse
+    (description) Real-network speedtest for the terminal. Pings major endpoints across the world and measures true download and upload bandwidth.
+    (repo) https://github.com/fezcode/atlas.pulse.git
+    (bin) atlas.pulse
+    (category) network
+    (version) 0.1.0
