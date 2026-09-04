@@ -359,3 +359,11 @@
     (bin) atlas.pulse
     (category) network
     (version) 0.1.0
+
+  > (tool)
+    (name) atlas.monitors
+    (description) Control your monitors from the command line over DDC/CI — brightness, contrast, input, volume, power and any raw VCP feature.
+    (repo) https://github.com/fezcode/atlas.monitors
+    (bin) atlas.monitors
+    (category) system
+    (version) 0.1.0
