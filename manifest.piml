@@ -14,7 +14,7 @@
     (repo) https://github.com/fezcode/atlas.radio
     (bin) atlas.radio
     (category) network
-    (version) 0.3.2
+    (version) 0.4.0
 
   > (tool)
     (name) atlas.grave
@@ -38,7 +38,7 @@
     (repo) https://github.com/fezcode/atlas.screensaver
     (bin) atlas.screensaver
     (category) system
-    (version) 0.3.2
+    (version) 0.4.0
 
   > (tool)
     (name) atlas.todo
@@ -86,7 +86,7 @@
     (repo) https://github.com/fezcode/atlas.cam
     (bin) atlas.cam
     (category) media
-    (version) 0.1.4
+    (version) 0.2.0
 
   > (tool)
     (name) atlas.games
@@ -254,7 +254,7 @@
     (repo) https://github.com/fezcode/atlas.batchdown
     (bin) atlas.batchdown
     (category) media
-    (version) 0.1.1
+    (version) 0.2.0
 
   > (tool)
     (name) atlas.burner
@@ -294,7 +294,7 @@
     (repo) https://github.com/fezcode/yap.git
     (bin) atlas.yap
     (category) media
-    (version) 0.3.2
+    (version) 0.4.0
 
   > (tool)
     (name) atlas.tones
@@ -302,7 +302,7 @@
     (repo) https://github.com/fezcode/atlas.tones.git
     (bin) atlas.tones
     (category) media
-    (version) 0.2.25
+    (version) 0.3.0
 
   > (tool)
     (name) atlas.pilot
